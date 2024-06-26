@@ -33,13 +33,13 @@ public class PetRepository : IPetRepository
         throw new RowNotInTableException();
     }
 
-    public async Task<Pet> CreateAsync(CreatePetRequestDto newPet)
+    public async Task<Pet> CreateAsync(CreatePetRequestDto requestDto)
     {
-        var pet = newPet.ToPetFromCreatePetRequestDto();
-        await _dbContext.Pets.AddAsync(pet);
+        var newPet = requestDto.ToPetFromCreatePetRequestDto();
+        await _dbContext.Pets.AddAsync(newPet);
         await _dbContext.SaveChangesAsync();
 
-        return pet;
+        return newPet;
     }
 
     public async Task<Pet> UpdateAsync(int petId, UpdatePetRequestDto petDto)
