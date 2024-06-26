@@ -8,12 +8,12 @@ public class Pet
     [MaxLength(30)]
     public string Name { get; set; } = String.Empty;
     public Species Species { get; init; }
-    public DateTime Birth { get; set; } 
+    public DateTime Birth { get; init; } 
     public Gender Gender { get; init; }
     public bool IsNeutered { get; set; }
-    [MaxLength(300)] public string Description { get; set; } = String.Empty;
+    [MaxLength(500)] public string Description { get; set; } = String.Empty;
     public User? Owner { get; set; }
-    [MaxLength(100)]
+    [MaxLength(200)]
     public string PictureLink { get; set; } = String.Empty;
 
     public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
