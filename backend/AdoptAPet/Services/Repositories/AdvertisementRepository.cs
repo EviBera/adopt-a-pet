@@ -1,7 +1,6 @@
 using System.Data;
 using AdoptAPet.Data;
 using AdoptAPet.DTOs.Advertisement;
-using AdoptAPet.DTOs.Pet;
 using AdoptAPet.Mappers;
 using AdoptAPet.Models;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +18,18 @@ public class AdvertisementRepository : IAdvertisementRepository
     }
     public async Task<IEnumerable<AdvertisementDto>> GetAllAsync()
     {
-        var ads = await _dbContext.Advertisements.Select(ad => ad.ToAdvertisementDto()).ToListAsync();
+        var ads = await _dbContext.Advertisements
+            .Include(a => a.Pet)
+            .Include(a => a.Applications)
+            .Select(ad => ad.ToAdvertisementDto()).ToListAsync();
         return ads;
     }
 
     public async Task<IEnumerable<AdvertisementDto>> GetCurrentAdsAsync()
     {
         var ads = await _dbContext.Advertisements
+            .Include(a => a.Pet)
+            .Include(a => a.Applications)
             .Where(ad => ad.Pet.Owner != null)
             .Select(ad=> ad.ToAdvertisementDto())
             .ToListAsync();
@@ -34,7 +38,10 @@ public class AdvertisementRepository : IAdvertisementRepository
 
     public async Task<AdvertisementDto> GetByIdAsync(int advertisementId)
     {
-        var ad = await _dbContext.Advertisements.FirstOrDefaultAsync(ad => ad.Id == advertisementId);
+        var ad = await _dbContext.Advertisements
+            .Include(a => a.Pet)
+            .Include(a => a.Applications)
+            .FirstOrDefaultAsync(ad => ad.Id == advertisementId);
         if (ad != null)
         {
             return ad.ToAdvertisementDto();
@@ -45,7 +52,15 @@ public class AdvertisementRepository : IAdvertisementRepository
 
     public async Task<Advertisement> CreateAsync(CreateAdvertisementRequestDto requestDto)
     {
+        var pet = await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == requestDto.PetId);
+        
+        if (pet == null)
+        {
+            throw new RowNotInTableException();
+        }
+        
         var newAd = requestDto.ToAdvertisementFromCreateAdvertisementRequestDto();
+        
         await _dbContext.Advertisements.AddAsync(newAd);
         await _dbContext.SaveChangesAsync();
 
