@@ -1,3 +1,4 @@
+using AdoptAPet.DTOs.Application;
 using AdoptAPet.DTOs.Pet;
 using AdoptAPet.Models;
 
@@ -9,5 +10,5 @@ public class AdvertisementDto
     public PetDto PetDto { get; init; } = null!;
     public DateTime CreatedAt { get; init; } 
     public DateTime ExpiresAt { get; set; }
-    public ICollection<Models.Application>? Applications { get; set; }
+    public ICollection<ApplicationDto>? Applications { get; set; }
 }
