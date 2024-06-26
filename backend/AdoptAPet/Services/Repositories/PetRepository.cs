@@ -42,13 +42,35 @@ public class PetRepository : IPetRepository
         return pet;
     }
 
-    public Task<Pet> UpdateAsync(Pet pet)
+    public async Task<Pet> UpdateAsync(int petId, UpdatePetRequestDto petDto)
     {
-        throw new NotImplementedException();
+        var pet = await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == petId);
+        
+        if (pet == null)
+        {
+            throw new RowNotInTableException();
+        }
+
+        pet.Name = petDto.Name ?? pet.Name;
+        pet.IsNeutered = petDto.IsNeutered ?? pet.IsNeutered;
+        pet.Description = petDto.Description ?? pet.Description;
+        pet.PictureLink = petDto.PictureLink ?? pet.PictureLink;
+
+        await _dbContext.SaveChangesAsync();
+
+        return pet;
     }
 
-    public Task DeleteAsync(Pet pet)
+    public async Task DeleteAsync(int petId)
     {
-        throw new NotImplementedException();
+        var pet = await _dbContext.Pets.FirstOrDefaultAsync(p => p.Id == petId);
+
+        if (pet == null)
+        {
+            throw new RowNotInTableException();
+        }
+
+        _dbContext.Pets.Remove(pet);
+        await _dbContext.SaveChangesAsync();
     }
 }

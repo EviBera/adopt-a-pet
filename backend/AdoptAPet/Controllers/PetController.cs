@@ -70,4 +70,45 @@ public class PetController : ControllerBase
         }
         
     }
+
+    [HttpPatch("{petId:int}")]
+    public async Task<ActionResult<PetDto>> UpdatePetAsync([Required, FromRoute] int petId,
+        [FromBody] UpdatePetRequestDto petDto)
+    {
+        try
+        {
+            var pet = await _repository.UpdateAsync(petId, petDto);
+            return Ok(pet.ToPetDto());
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error updating pet with id " + petId);
+            if (e is RowNotInTableException)
+            {
+                return BadRequest("Pet does not exist");
+            }
+
+            return StatusCode(500, "Something went wrong");
+        }
+    }
+
+    [HttpDelete("{petId:int}")]
+    public async Task<ActionResult> DeleteAsync([Required, FromRoute]int petId)
+    {
+        try
+        {
+            await _repository.DeleteAsync(petId);
+            return Ok("Pet deleted successfully");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error deleting pet with id: " + petId);
+            if (e is RowNotInTableException)
+            {
+                return BadRequest("Pet does not exist.");
+            }
+
+            return StatusCode(500, "Something went wrong.");
+        }
+    }
 }
