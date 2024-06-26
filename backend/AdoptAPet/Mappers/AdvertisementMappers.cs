@@ -13,7 +13,7 @@ public static class AdvertisementMappers
             PetDto = advertisementModel.Pet.ToPetDto(),
             CreatedAt = advertisementModel.CreatedAt,
             ExpiresAt = advertisementModel.ExpiresAt,
-            Applications = advertisementModel.Applications
+            Applications = advertisementModel.Applications.Select(app => app.ToApplicationDto()).ToList()
         };
     }
 
@@ -23,8 +23,8 @@ public static class AdvertisementMappers
         return new Advertisement
         {
             PetId = requestDto.PetId,
-            CreatedAt = DateTime.Now,
-            ExpiresAt = requestDto.ExpiresAt,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.SpecifyKind(requestDto.ExpiresAt, DateTimeKind.Utc),
             Applications = new List<Application>()
         };
     }
