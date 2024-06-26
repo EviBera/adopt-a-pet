@@ -1,3 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using AdoptAPet.DTOs.Pet;
+using AdoptAPet.Mappers;
 using AdoptAPet.Models;
 using AdoptAPet.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +22,7 @@ public class PetController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Pet>>> GetAllAsync()
+    public async Task<ActionResult<List<PetDto>>> GetAllAsync()
     {
         try
         {
@@ -30,5 +34,40 @@ public class PetController : ControllerBase
             _logger.LogError(e, "Error getting pets.");
             return StatusCode(500, e.Message);
         }
+    }
+
+    [HttpGet("{petId:int}")]
+    public async Task<ActionResult<PetDto>> GetByIdAsync([Required, FromRoute]int petId)
+    {
+        try
+        {
+            var pet = await _repository.GetByIdAsync(petId);
+            return Ok(pet);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting pet with id: " + petId);
+            if (e is RowNotInTableException)
+            {
+                return NotFound($"The searched pet does not exist.");
+            }
+            return StatusCode(500, $"Error getting pet, {e.Message}");
+        }
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<PetDto>> RegisterPetAsync([FromBody] CreatePetRequestDto petDto)
+    {
+        try
+        {
+            var newPet = await _repository.CreateAsync(petDto);
+            return Ok(newPet.ToPetDto());
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error registering the new pet.");
+            return BadRequest($"Error registering the pet, {e.Message}");
+        }
+        
     }
 }
