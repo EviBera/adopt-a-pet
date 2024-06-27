@@ -15,4 +15,14 @@ public static class ApplicationMappers
             IsAccepted = applicationModel.IsAccepted
         };
     }
+
+    public static Application ToApplicationFromCreateApplicationRequestDto(this CreateApplicationRequestDto requestDto)
+    {
+        return new Application
+        {
+            UserId = requestDto.UserId,
+            AdvertisementId = requestDto.AdvertisementId,
+            IsAccepted = null
+        };
+    }
 }
