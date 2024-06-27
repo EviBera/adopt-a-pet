@@ -99,7 +99,7 @@ public class ApplicationController : ControllerBase
         }
     }
 
-    [HttpPost("{applicationId:int}")]
+    [HttpPatch("{applicationId:int}")]
     public async Task<ActionResult<ApplicationDto>> UpdateAsync([FromRoute] int applicationId,
         [FromBody] UpdateApplicationRequestDto requestDto)
     {
