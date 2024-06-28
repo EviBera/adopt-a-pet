@@ -26,7 +26,7 @@ public class AdvertisementController : ControllerBase
         try
         {
             var ads = await _repository.GetAllAsync();
-            return ads.ToList();
+            return Ok(ads);
         }
         catch (Exception e)
         {
@@ -46,7 +46,7 @@ public class AdvertisementController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting advertisement with id " + advertisementId);
-            return e is RowNotInTableException ? NotFound("The searched advertisement does not exist") : StatusCode(500, e.Message);
+            return e is RowNotInTableException ? NotFound("The searched advertisement does not exist.") : StatusCode(500, e.Message);
         }
     }
 

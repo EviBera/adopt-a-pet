@@ -30,7 +30,7 @@ public class AdvertisementRepository : IAdvertisementRepository
         var ads = await _dbContext.Advertisements
             .Include(a => a.Pet)
             .Include(a => a.Applications)
-            .Where(ad => ad.Pet.Owner != null)
+            .Where(ad => ad.Pet.Owner == null)
             .Select(ad=> ad.ToAdvertisementDto())
             .ToListAsync();
         return ads;

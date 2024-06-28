@@ -27,7 +27,7 @@ public class PetController : ControllerBase
         try
         {
             var pets = await _repository.GetAllAsync();
-            return Ok(pets.ToList());
+            return Ok(pets);
         }
         catch (Exception e)
         {
