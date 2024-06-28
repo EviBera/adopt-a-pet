@@ -68,7 +68,6 @@ public class PetController : ControllerBase
             _logger.LogError(e, "Error registering the new pet.");
             return BadRequest($"Error registering the pet, {e.Message}");
         }
-        
     }
 
     [HttpPatch("{petId:int}")]
@@ -85,10 +84,10 @@ public class PetController : ControllerBase
             _logger.LogError(e, "Error updating pet with id " + petId);
             if (e is RowNotInTableException)
             {
-                return BadRequest("Pet does not exist");
+                return BadRequest("Pet does not exist.");
             }
 
-            return StatusCode(500, "Something went wrong");
+            return StatusCode(500, "Something went wrong.");
         }
     }
 
@@ -98,7 +97,7 @@ public class PetController : ControllerBase
         try
         {
             await _repository.DeleteAsync(petId);
-            return Ok("Pet deleted successfully");
+            return Ok("Pet deleted successfully.");
         }
         catch (Exception e)
         {
