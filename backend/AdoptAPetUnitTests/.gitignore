@@ -1,0 +1,39 @@
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+*.dotCover
+*.ReSharper
+*.ReSharper.*
+*_ReSharper.*
+*.Rider.*
+
+# NUnit
+TestResult.xml
+TestResults/
+
+# Backup & Report files
+*.bak
+*.swp
+*.log
+
+# OSX
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Temporary files
+~$*
