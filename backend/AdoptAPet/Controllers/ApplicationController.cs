@@ -20,42 +20,32 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpGet("{userId}")]
-    public async Task<ActionResult<ApplicationDto>> GetByUserIdAsync([FromRoute]string userId)
+    public async Task<ActionResult<List<ApplicationDto>>> GetByUserIdAsync([FromRoute]string userId)
     {
         try
         {
-            var app = await _repository.GetByUserAsync(userId);
-            return Ok(app);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Error getting applications of user " + userId);
-            if (e is RowNotInTableException)
-            {
-                return BadRequest("Invalid user id.");
-            }
-
-            return StatusCode(500, e.Message);
-        }
-    }
-
-    [HttpGet("app/{applicationId:int}")]
-    public async Task<ActionResult<List<ApplicationDto>>> GetByIdAsync([FromRoute]int applicationId)
-    {
-        try
-        {
-            var apps = await _repository.GetByIdAsync(applicationId);
+            var apps = await _repository.GetByUserAsync(userId);
             return Ok(apps);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error getting application with id " + applicationId);
-            if (e is RowNotInTableException)
-            {
-                return BadRequest("Invalid application id.");
-            }
+            _logger.LogError(e, "Error getting applications of user.");
+            return e is RowNotInTableException ? BadRequest("Invalid user id.") : StatusCode(500, e.Message);
+        }
+    }
 
-            return StatusCode(500, e.Message);
+    [HttpGet("app/{applicationId:int}")]
+    public async Task<ActionResult<ApplicationDto>> GetByIdAsync([FromRoute]int applicationId)
+    {
+        try
+        {
+            var app = await _repository.GetByIdAsync(applicationId);
+            return Ok(app);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting application with id " + applicationId);
+            return e is RowNotInTableException ? BadRequest("Invalid application id.") : StatusCode(500, e.Message);
         }
     }
 
@@ -70,12 +60,7 @@ public class ApplicationController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Error getting applications of advertisement with id " + advertisementId);
-            if (e is RowNotInTableException)
-            {
-                return BadRequest("Invalid advertisement id.");
-            }
-
-            return StatusCode(500, e.Message);
+            return e is RowNotInTableException ? BadRequest("Invalid advertisement id.") : StatusCode(500, e.Message);
         }
     }
 
@@ -90,12 +75,7 @@ public class ApplicationController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to register the application.");
-            if (e is RowNotInTableException)
-            {
-                return BadRequest("Invalid parameters.");
-            }
-
-            return StatusCode(500, e.Message);
+            return e is RowNotInTableException ? BadRequest("Invalid parameters.") : StatusCode(500, e.Message);
         }
     }
 
@@ -111,12 +91,7 @@ public class ApplicationController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to update the application.");
-            if (e is RowNotInTableException)
-            {
-                return BadRequest("Invalid application id.");
-            }
-
-            return StatusCode(500, e.Message);
+            return e is RowNotInTableException ? BadRequest("Invalid application id.") : StatusCode(500, e.Message);
         }
     }
 
@@ -131,12 +106,7 @@ public class ApplicationController : ControllerBase
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to delete the application.");
-            if (e is RowNotInTableException)
-            {
-                return BadRequest("Invalid application id.");
-            }
-
-            return StatusCode(500, e.Message);
+            return e is RowNotInTableException ? BadRequest("Invalid application id.") : StatusCode(500, e.Message);
         }
     }
 }
