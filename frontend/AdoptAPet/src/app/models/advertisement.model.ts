@@ -3,8 +3,7 @@ import { IApplication } from "./application.model"
 
 export interface IAdvertisement {
     id: number,
-    petId: number,
-    pet: IPet,
+    petDto: IPet,
     createdAt: Date,
     expiresAt: Date,
     applications: IApplication[]
