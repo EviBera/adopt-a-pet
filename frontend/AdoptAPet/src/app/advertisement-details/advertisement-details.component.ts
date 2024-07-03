@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IAdvertisement } from '../models/advertisement.model';
 import { CommonModule } from '@angular/common';
 
@@ -11,4 +11,9 @@ import { CommonModule } from '@angular/common';
 })
 export class AdvertisementDetailsComponent {
   @Input() ad!: IAdvertisement;
+  @Output() adopt = new EventEmitter();
+
+  adoptButtonClicked(ad: IAdvertisement){
+    this.adopt.emit();
+  }
 }

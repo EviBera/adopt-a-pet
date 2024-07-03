@@ -23,4 +23,8 @@ export class AdvertisementListComponent {
       this.advertisements = ads;
     })
   }
+
+  handInApplication(ad: IAdvertisement){
+    console.log("I'd like to adopt button is clicked, ad: " + ad.id)
+  }
 }

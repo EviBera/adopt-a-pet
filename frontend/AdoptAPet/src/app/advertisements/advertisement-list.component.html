@@ -3,6 +3,7 @@
 <ul>
     <li *ngFor="let ad of advertisements">
         <aap-advertisement-details
-        [ad]="ad"></aap-advertisement-details>
+        [ad]="ad"
+        (adopt)="handInApplication(ad)"></aap-advertisement-details>
     </li>
 </ul>

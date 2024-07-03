@@ -11,6 +11,6 @@
             <p>The advertisement expires at: {{ad.expiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
         </div>
     </div>
-    <button>I'd like to adopt</button>
+    <button (click)="adoptButtonClicked(ad)">I'd like to adopt</button>
 </div>
 <hr>
