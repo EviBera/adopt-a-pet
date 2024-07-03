@@ -1,13 +1,7 @@
 <h1>Adoptable pets</h1>
 <ul>
     <li *ngFor="let ad of advertisements">
-        <p>{{ad.petDto.name}}</p>
-        <p>A {{ad.petDto.gender | lowercase}} {{ad.petDto.species | lowercase}}.</p>
-        <p>{{ad.petDto.description}}</p>
-        <p>Birth (estimated): {{ad.petDto.birth | date: 'dd/MM/yyyy'}}</p>
-        <p *ngIf="ad.petDto.isNeutered">The animal is neutered.</p>
-        <p *ngIf="!ad.petDto.isNeutered">The animal is not neutered.</p>
-        <img [src]="ad.petDto.pictureLink" [alt]="ad.petDto.name" />
-        <p>The advertisement expires at: {{ad.expiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
+        <aap-advertisement-details
+        [ad]="ad"></aap-advertisement-details>
     </li>
 </ul>

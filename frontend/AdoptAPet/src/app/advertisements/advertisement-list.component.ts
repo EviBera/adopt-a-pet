@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { IAdvertisement } from '../models/advertisement.model';
 import { AdvertisementService } from './advertisement.service';
 import { CommonModule } from '@angular/common';
+import { AdvertisementDetailsComponent } from '../advertisement-details/advertisement-details.component';
 
 @Component({
   selector: 'aap-advertisement-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AdvertisementDetailsComponent],
   templateUrl: './advertisement-list.component.html',
   styleUrl: './advertisement-list.component.css'
 })
