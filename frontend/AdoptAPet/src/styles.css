@@ -10,6 +10,12 @@ ul {
     list-style-type: none;
 }
 
+a.active {
+    background-color: #ffe6cc;
+    color: #4d2800;
+    text-decoration: underline;
+}
+
 @media (max-width: 768px) {
     .flex-container {
       flex-direction: column;
