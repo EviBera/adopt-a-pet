@@ -1,0 +1,10 @@
+<h1>Adoptable pets</h1>
+<hr>
+<ul data-test="adoptable-pets-list">
+    <li data-test="adoptable-pet-list-item" *ngFor="let ad of advertisements">
+        <aap-advertisement-details
+        data-test="adoptable-pet"
+        [ad]="ad"
+        (adopt)="handInApplication(ad)"></aap-advertisement-details>
+    </li>
+</ul>
