@@ -21,18 +21,23 @@ public static class PetMappers
         };
     }
 
-    public static Pet ToPetFromCreatePetRequestDto(this CreatePetRequestDto petDto)
+    public static Pet? ToPetFromCreatePetRequestDto(this CreatePetRequestDto petDto)
     {
-        return new Pet
+        if (Enum.IsDefined(typeof(Species), petDto.Species) && Enum.IsDefined(typeof(Gender), petDto.Gender))
         {
-            Name = petDto.Name,
-            Species = petDto.Species,
-            Birth = petDto.Birth,
-            Gender = petDto.Gender,
-            IsNeutered = petDto.IsNeutered,
-            Description = petDto.Description,
-            Owner = null,
-            PictureLink = petDto.PictureLink
-        };
+            return new Pet
+                    {
+                        Name = petDto.Name,
+                        Species = petDto.Species,
+                        Birth = petDto.Birth,
+                        Gender = petDto.Gender,
+                        IsNeutered = petDto.IsNeutered,
+                        Description = petDto.Description,
+                        Owner = null,
+                        PictureLink = petDto.PictureLink
+                    };
+        }
+        
+        throw new ArgumentException("Invalid species or gender.");
     }
 }
