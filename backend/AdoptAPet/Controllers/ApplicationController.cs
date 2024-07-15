@@ -70,7 +70,7 @@ public class ApplicationController : ControllerBase
         try
         {
             var newApplication = await _repository.CreateAsync(requestDto);
-            return Ok(newApplication.ToApplicationDto());
+            return CreatedAtAction("GetById", new { applicationId = newApplication.Id}, newApplication.ToApplicationDto());
         }
         catch (Exception e)
         {
@@ -101,7 +101,7 @@ public class ApplicationController : ControllerBase
         try
         {
             await _repository.DeleteAsync(applicationId);
-            return Ok("Application deleted.");
+            return NoContent();
         }
         catch (Exception e)
         {

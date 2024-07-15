@@ -312,7 +312,7 @@ public class ApplicationControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
+        Assert.That(actionResult.StatusCode, Is.EqualTo(201));
         var returnedData = actionResult.Value as ApplicationDto;
         Assert.IsNotNull(returnedData);
         Assert.That(returnedData.Id, Is.EqualTo(expectedData.Id));
@@ -508,7 +508,7 @@ public class ApplicationControllerUnitTests
     }
 
     [Test]
-    public async Task DelateAsync_ReturnsOk_IfRepositoryDoesNotThrowException()
+    public async Task DelateAsync_ReturnsStatusCode204_IfRepositoryDoesNotThrowException()
     {
         //Arrange
         var applicationId = 18;
@@ -519,9 +519,9 @@ public class ApplicationControllerUnitTests
         
         //Assert
         Assert.IsNotNull(result);
-        var actionResult = result as ObjectResult;
-        Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
+        Assert.IsInstanceOf<NoContentResult>(result);
+        var noContentResult = result as NoContentResult;
+        Assert.That(noContentResult.StatusCode, Is.EqualTo(204));
         _repositoryMock.Verify(repo => repo.DeleteAsync(applicationId), Times.Once);
     }
 

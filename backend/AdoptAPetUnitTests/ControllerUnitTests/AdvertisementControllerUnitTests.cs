@@ -288,7 +288,7 @@ public class AdvertisementControllerUnitTests
     }
 
     [Test]
-    public async Task CreateAdvertisement_ReturnsOk_IfRepositoryProvidesData()
+    public async Task CreateAdvertisement_ReturnsStatusCode201_IfRepositoryProvidesData()
     {
         var inputData = new CreateAdvertisementRequestDto
         {
@@ -302,7 +302,8 @@ public class AdvertisementControllerUnitTests
             ExpiresAt = new DateTime(2024, 8, 1),
             Applications = new List<ApplicationDto>()
         };
-        _repositoryMock.Setup(repo => repo.CreateAsync(inputData)).ReturnsAsync(new Advertisement
+        
+        _repositoryMock.Setup(repo => repo.CreateAsync(inputData)).ReturnsAsync( new Advertisement
         {
             Id = 8,
             PetId = 6,
@@ -334,14 +335,13 @@ public class AdvertisementControllerUnitTests
         
         //Assert
         Assert.IsNotNull(result);
-        var actionResult = result.Result as ObjectResult;
-        Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
+        Assert.IsInstanceOf<CreatedAtActionResult>(result.Result);
+        var actionResult = result.Result as CreatedAtActionResult;
+        Assert.That(actionResult?.ActionName, Is.EqualTo("GetById"));
+        Assert.That(actionResult?.RouteValues["advertisementId"], Is.EqualTo(expectedData.Id));
         var returnedData = actionResult.Value as AdvertisementDto;
-        Assert.IsNotNull(returnedData);
-        Assert.That(returnedData.Id, Is.EqualTo(expectedData.Id));
-        Assert.That(returnedData.CreatedAt, Is.EqualTo(expectedData.CreatedAt));
         Assert.That(returnedData.ExpiresAt, Is.EqualTo(expectedData.ExpiresAt));
+        Assert.That(returnedData.CreatedAt, Is.EqualTo(expectedData.CreatedAt));
         _repositoryMock.Verify(repo => repo.CreateAsync(inputData), Times.Once);
     }
 

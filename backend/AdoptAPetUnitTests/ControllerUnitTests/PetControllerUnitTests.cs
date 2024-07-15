@@ -224,7 +224,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
+        Assert.That(actionResult.StatusCode, Is.EqualTo(201));
         var returnedData = actionResult.Value as PetDto;
         Assert.IsNotNull(returnedData);
         Assert.That(returnedData.Id, Is.EqualTo(expectedData.Id));
@@ -410,9 +410,9 @@ public class PetControllerUnitTests
         
         //Assert
         Assert.IsNotNull(result);
-        var actionResult = result as ObjectResult;
-        Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
+        var noContentResult = result as NoContentResult;
+        Assert.IsNotNull(noContentResult);
+        Assert.That(noContentResult.StatusCode, Is.EqualTo(204));
         _repositoryMock.Verify(repo => repo.DeleteAsync(petId), Times.Once);
     }
 
