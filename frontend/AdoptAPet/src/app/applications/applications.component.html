@@ -1,10 +1,15 @@
 <h1>My applications:</h1>
-<div data-test="not-have-applications" *ngIf="applicationList.length === 0">
+<h2 data-test="not-have-applications" *ngIf="applicationList.length === 0">
     You haven't handed in an application to adopt a pet yet.
-</div>
+</h2>
 <ul data-test="application-list" *ngIf="applicationList.length > 0">
     <li *ngFor="let app of applicationList">
         <div data-test="app-id">app id: {{app.id}}</div>
-        <div data-test="app-accepted">accepted? {{app.isAccepted}}</div>
+        <div data-test="app-accepted">
+            <p *ngIf="app.isAccepted">accepted</p>
+            <p *ngIf="app.isAccepted === false">refused</p>
+            <p *ngIf="app.isAccepted === null">not decided yet</p>
+        </div>
+        <hr>
     </li>
 </ul>
