@@ -3,6 +3,8 @@ import { IAdvertisement } from '../models/advertisement.model';
 import { AdvertisementService } from './advertisement.service';
 import { CommonModule } from '@angular/common';
 import { AdvertisementDetailsComponent } from '../advertisement-details/advertisement-details.component';
+import { AppService } from '../applications/app.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'aap-advertisement-list',
@@ -15,7 +17,9 @@ export class AdvertisementListComponent {
   advertisements: any
 
   constructor(
-    private adSvc: AdvertisementService
+    private adSvc: AdvertisementService,
+    private appSvc: AppService,
+    private router: Router
   ){}
 
   ngOnInit(){
@@ -26,5 +30,7 @@ export class AdvertisementListComponent {
 
   handInApplication(ad: IAdvertisement){
     console.log("I'd like to adopt button is clicked, ad: " + ad.id)
+    this.appSvc.handIn(ad);
+    this.router.navigate(['/applications']);
   }
 }
