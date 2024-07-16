@@ -22,7 +22,10 @@ public class ApplicationRepository : IApplicationRepository
     
     public async Task<ApplicationDto> GetByIdAsync(int applicationId)
     {
-        var app = await _dbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
+        var app = await _dbContext.Applications
+            .Include(a => a.Advertisement)
+            .ThenInclude(ad => ad.Pet)
+            .FirstOrDefaultAsync(a => a.Id == applicationId);
         if (app == null)
         {
             throw new RowNotInTableException();
@@ -40,6 +43,8 @@ public class ApplicationRepository : IApplicationRepository
         }
         
         var apps = await _dbContext.Applications
+            .Include(a => a.Advertisement)
+            .ThenInclude(ad => ad.Pet)
             .Where(a => a.UserId == userId)
             .Select(a => a.ToApplicationDto())
             .ToListAsync();
@@ -56,6 +61,8 @@ public class ApplicationRepository : IApplicationRepository
         }
 
         var apps = await _dbContext.Applications
+            .Include(a => a.Advertisement)
+            .ThenInclude(advertisement => advertisement.Pet)
             .Where(app => app.AdvertisementId == advertisementId)
             .Select(a => a.ToApplicationDto())
             .ToListAsync();
