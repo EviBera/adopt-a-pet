@@ -4,32 +4,32 @@
 </h2>
 <ul data-test="application-list" *ngIf="applicationList.length > 0">
     <li *ngFor="let app of applicationList">
-        <h3>The pet: {{ app.petName }}</h3>
+        <h3 data-test="pet-name">The pet: {{ app.petName }}</h3>
         <div class="flex-container">
             <div class="left-side">
                 <div>
-                    <img data-test="" [src]="app.petPictureLink" [alt]="app.petName" />
+                    <img data-test="pet-picture" [src]="app.petPictureLink" [alt]="app.petName" />
                 </div>
-                <div>
-                    <p *ngIf="app.petIsNeutered">A neutered {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
+                <div data-test="pet-deteils">
+                    <p data-test="neutered-pet" *ngIf="app.petIsNeutered">A neutered {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
                         }}.
                     </p>
-                    <p *ngIf="!app.petIsNeutered">A fertile {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
+                    <p data-test="fertile-pet" *ngIf="!app.petIsNeutered">A fertile {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
                         }}.
                     </p>
-                    <p>Estimated birth: {{ app.petBirth | date: 'dd/MM/yyyy' }}</p>
-                    <p>Deadline of application: {{app.advertisementExpiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
+                    <p data-test="pet-birth">Estimated birth: {{ app.petBirth | date: 'dd/MM/yyyy' }}</p>
+                    <p data-test="deadline">Deadline of application: {{app.advertisementExpiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
                 </div>
             </div>
-            <div >
-                <button>Withraw my application</button>
+            <div data-test="btn-container">
+                <button data-test="withraw-btn">Withraw my application</button>
             </div>
         </div>
 
-        <div data-test="app-accepted" class="result">
-            <p *ngIf="app.isAccepted">Application is accepted.</p>
-            <p *ngIf="app.isAccepted === false">Application is refused.</p>
-            <p *ngIf="app.isAccepted === null">There wasn't a decision yet.</p>
+        <div data-test="app-acceptance" class="result">
+            <p data-test="accepted" *ngIf="app.isAccepted">Application is accepted.</p>
+            <p data-test="refused" *ngIf="app.isAccepted === false">Application is refused.</p>
+            <p data-test="not-decided" *ngIf="app.isAccepted === null">There wasn't a decision yet.</p>
         </div>
         <hr>
     </li>
