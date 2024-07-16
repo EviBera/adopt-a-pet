@@ -10,3 +10,34 @@ h2 {
 ul {
     margin-top: 40px;
 }
+
+.result {
+    font-weight: bold;
+}
+
+img {
+    max-width: 100px;
+    height: auto;
+    margin: 10px;
+}
+
+.left-side {
+    display: flex;
+    gap: 80px;
+}
+
+button {
+    margin: 20px;
+    background-color: #b35900;
+    border: #4d2600;
+    color: white;
+    text-align: center;
+    display: inline-block;
+    font-size: large;
+    padding: 20px;
+    height: 100%;
+}
+
+button:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 #4d2600;
+}

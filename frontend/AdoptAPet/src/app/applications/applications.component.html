@@ -4,11 +4,32 @@
 </h2>
 <ul data-test="application-list" *ngIf="applicationList.length > 0">
     <li *ngFor="let app of applicationList">
-        <div data-test="app-id">app id: {{app.id}}</div>
-        <div data-test="app-accepted">
-            <p *ngIf="app.isAccepted">accepted</p>
-            <p *ngIf="app.isAccepted === false">refused</p>
-            <p *ngIf="app.isAccepted === null">not decided yet</p>
+        <h3>The pet: {{ app.petName }}</h3>
+        <div class="flex-container">
+            <div class="left-side">
+                <div>
+                    <img data-test="" [src]="app.petPictureLink" [alt]="app.petName" />
+                </div>
+                <div>
+                    <p *ngIf="app.petIsNeutered">A neutered {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
+                        }}.
+                    </p>
+                    <p *ngIf="!app.petIsNeutered">A fertile {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
+                        }}.
+                    </p>
+                    <p>Estimated birth: {{ app.petBirth | date: 'dd/MM/yyyy' }}</p>
+                    <p>Deadline of application: {{app.advertisementExpiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
+                </div>
+            </div>
+            <div >
+                <button>Withraw my application</button>
+            </div>
+        </div>
+
+        <div data-test="app-accepted" class="result">
+            <p *ngIf="app.isAccepted">Application is accepted.</p>
+            <p *ngIf="app.isAccepted === false">Application is refused.</p>
+            <p *ngIf="app.isAccepted === null">There wasn't a decision yet.</p>
         </div>
         <hr>
     </li>
