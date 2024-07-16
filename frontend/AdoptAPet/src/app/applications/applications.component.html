@@ -6,8 +6,9 @@
     <li *ngFor="let app of applicationList">
         <div data-test="app-id">app id: {{app.id}}</div>
         <div data-test="app-accepted">
-            <p *ngIf="app.isAccepted">accepted? YES</p>
-            <p *ngIf="!app.isAccepted">accepted? NO</p>
+            <p *ngIf="app.isAccepted">accepted</p>
+            <p *ngIf="app.isAccepted === false">refused</p>
+            <p *ngIf="app.isAccepted === null">not decided yet</p>
         </div>
         <hr>
     </li>
