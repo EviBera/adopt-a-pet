@@ -7,6 +7,10 @@ public static class ApplicationMappers
 {
     public static ApplicationDto ToApplicationDto(this Application applicationModel)
     {
+        if (applicationModel == null) throw new ArgumentNullException(nameof(applicationModel));
+        if (applicationModel.Advertisement == null) throw new ArgumentNullException(nameof(applicationModel.Advertisement));
+        if (applicationModel.Advertisement.Pet == null) throw new ArgumentNullException(nameof(applicationModel.Advertisement.Pet));
+        
         return new ApplicationDto
         {
             Id = applicationModel.Id,
