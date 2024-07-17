@@ -2,9 +2,7 @@
 
 ## About the project
 
-This application helps an imaginary pet rescue team to find adopters for stray animals. I have collaborated with [Ildikó Földi Krizsán](https://github.com/FoldiKrizsanIldiko)
-
-who has tested the application.
+This application helps an imaginary pet rescue team to find adopters for stray animals. I have collaborated with [Ildikó Földi Krizsán](https://github.com/FoldiKrizsanIldiko) who has tested the application.
 
 
 
@@ -14,7 +12,9 @@ who has tested the application.
 
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white) 8.0
 
-Entity Framework Core 8.0
+Entity Framework Core 8.0  
+
+
 
 
 
@@ -24,7 +24,9 @@ Entity Framework Core 8.0
 
 
 
-I used the official Docker instance.
+I used the official Docker instance.  
+
+
 
 
 
