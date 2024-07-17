@@ -38,4 +38,16 @@ export class AppService {
     });
    }
 
+   withdraw(applicationId: number){
+    const url = '/api/application/' + applicationId;
+    this.http.delete(url).subscribe({
+      next: data => {
+        this.fetchApplications();
+      },
+      error: err => {
+        console.error('Observable emitted an error: ' + err);
+      }
+    })
+   }
+
 }
