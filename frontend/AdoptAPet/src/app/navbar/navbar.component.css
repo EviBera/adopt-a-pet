@@ -1,0 +1,13 @@
+.container {
+    margin: 30px auto;
+    display: flex;
+}
+
+a {
+    margin-left: 20px;
+    font-size: large;
+    text-decoration: none;
+    color: black;
+    border: solid black 1px;
+    padding: 5px;
+}

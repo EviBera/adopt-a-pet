@@ -72,7 +72,7 @@ public class AdvertisementController : ControllerBase
         try
         {
             var newAd = await _repository.CreateAsync(requestDto);
-            return Ok(newAd.ToAdvertisementDto());
+            return CreatedAtAction("GetById", new { advertisementId = newAd.Id }, newAd.ToAdvertisementDto());
         }
         catch (Exception e)
         {

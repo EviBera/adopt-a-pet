@@ -1,7 +1,9 @@
+using System.Data;
 using AdoptAPet.DTOs.User;
 using AdoptAPet.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AdoptAPet.Controllers;
 
@@ -18,6 +20,21 @@ public class AuthController : ControllerBase
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
+    }
+
+    [HttpGet("{userId}")]
+    public async Task<ActionResult<User?>> GetByIdAsync([FromRoute] string userId)
+    {
+        try
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return user == null ? NotFound() : Ok(user);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting user.");
+            return StatusCode(500, e.Message);
+        }
     }
 
     [HttpPost("register")]

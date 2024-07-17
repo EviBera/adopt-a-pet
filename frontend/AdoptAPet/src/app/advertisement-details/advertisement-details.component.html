@@ -1,0 +1,16 @@
+<div class="flex-container">
+    <div class="left-side">
+        <img data-test="pet-picture-link" [src]="ad.petDto.pictureLink" [alt]="ad.petDto.name" />
+        <div class="description">
+            <p data-test="pet-name" class="name">{{ad.petDto.name}}</p>
+            <p data-test="pet-gender-and-species">A {{ad.petDto.gender | lowercase}} {{ad.petDto.species | lowercase}}.</p>
+            <p data-test="pet-description">{{ad.petDto.description}}</p>
+            <p data-test="pet-birth">Birth (estimated): {{ad.petDto.birth | date: 'dd/MM/yyyy'}}</p>
+            <p data-test="pet-neutered" *ngIf="ad.petDto.isNeutered">The animal is neutered.</p>
+            <p data-test="pet-neutered" *ngIf="!ad.petDto.isNeutered">The animal is not neutered.</p>
+            <p data-test="advertisement-expires">The advertisement expires at: {{ad.expiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
+        </div>
+    </div>
+    <button data-test="adopt-button" (click)="adoptButtonClicked(ad)">I'd like to adopt</button>
+</div>
+<hr>

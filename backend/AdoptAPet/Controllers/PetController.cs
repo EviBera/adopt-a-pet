@@ -61,7 +61,7 @@ public class PetController : ControllerBase
         try
         {
             var newPet = await _repository.CreateAsync(petDto);
-            return Ok(newPet.ToPetDto());
+            return CreatedAtAction("GetbyId", new { petId = newPet.Id }, newPet.ToPetDto());
         }
         catch (Exception e)
         {
@@ -97,7 +97,7 @@ public class PetController : ControllerBase
         try
         {
             await _repository.DeleteAsync(petId);
-            return Ok("Pet deleted successfully.");
+            return NoContent();
         }
         catch (Exception e)
         {

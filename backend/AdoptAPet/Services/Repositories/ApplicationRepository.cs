@@ -19,10 +19,13 @@ public class ApplicationRepository : IApplicationRepository
         _userManager = userManager;
     }
     
-    
     public async Task<ApplicationDto> GetByIdAsync(int applicationId)
     {
-        var app = await _dbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
+        var app = await _dbContext.Applications
+            .Include(a => a.User)
+            .Include(a => a.Advertisement)
+            .ThenInclude(ad => ad.Pet)
+            .FirstOrDefaultAsync(a => a.Id == applicationId);
         if (app == null)
         {
             throw new RowNotInTableException();
@@ -40,6 +43,9 @@ public class ApplicationRepository : IApplicationRepository
         }
         
         var apps = await _dbContext.Applications
+            .Include(a => a.User)
+            .Include(a => a.Advertisement)
+            .ThenInclude(ad => ad.Pet)
             .Where(a => a.UserId == userId)
             .Select(a => a.ToApplicationDto())
             .ToListAsync();
@@ -56,6 +62,9 @@ public class ApplicationRepository : IApplicationRepository
         }
 
         var apps = await _dbContext.Applications
+            .Include(a => a.User)
+            .Include(a => a.Advertisement)
+            .ThenInclude(advertisement => advertisement.Pet)
             .Where(app => app.AdvertisementId == advertisementId)
             .Select(a => a.ToApplicationDto())
             .ToListAsync();
@@ -66,19 +75,27 @@ public class ApplicationRepository : IApplicationRepository
     public async Task<Application> CreateAsync(CreateApplicationRequestDto requestDto)
     {
         var user = await _userManager.FindByIdAsync(requestDto.UserId);
-        var ad = await _dbContext.Advertisements.FirstOrDefaultAsync(a => a.Id == requestDto.AdvertisementId);
+        var ad = await _dbContext.Advertisements
+            .Include(a => a.Pet)
+            .FirstOrDefaultAsync(a => a.Id == requestDto.AdvertisementId);
         if (user == null || ad == null)
         {
             throw new RowNotInTableException();
         }
         
         var newApp = requestDto.ToApplicationFromCreateApplicationRequestDto();
+        newApp.User = user;
+        newApp.Advertisement = ad;
+        
         await _dbContext.Applications.AddAsync(newApp);
         await _dbContext.SaveChangesAsync();
-
+        
+        await _dbContext.Entry(newApp).Reference(a => a.Advertisement).LoadAsync();
+        await _dbContext.Entry(newApp.Advertisement).Reference(ad => ad.Pet).LoadAsync();
+        
         return newApp;
     }
-
+    
     public async Task<Application> UpdateAsync(int applicationId, UpdateApplicationRequestDto requestDto)
     {
         var app = await _dbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
