@@ -31,6 +31,7 @@ export class AdvertisementListComponent {
   handInApplication(ad: IAdvertisement){
     console.log("I'd like to adopt button is clicked, ad: " + ad.id)
     this.appSvc.handIn(ad);
+    alert("Your wish for adoption has been registered.");
     this.router.navigate(['/applications']);
   }
 }
