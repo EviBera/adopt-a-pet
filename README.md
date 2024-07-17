@@ -2,9 +2,7 @@
 
 ## About the project
 
-This application helps an imaginary pet rescue team to find adopters for stray animals. I have collaborated with 
-
-[Ildikó Földi Krizsán ]: https://github.com/FoldiKrizsanIldiko
+This application helps an imaginary pet rescue team to find adopters for stray animals. I have collaborated with [Ildikó Földi Krizsán](https://github.com/FoldiKrizsanIldiko)
 
 who has tested the application.
 
