@@ -25,4 +25,8 @@ export class ApplicationsComponent implements OnInit{
     return this.applications;
   }
 
+  withdrawButtonClicked( id: number){
+    console.log("withdraw btn clicked on application " + id);
+  }
+
 }
