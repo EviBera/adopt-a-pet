@@ -2,11 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IApplication } from '../models/application.model';
 import { AppService } from './app.service';
+import { ApplicationDetailsComponent } from '../application-details/application-details.component';
 
 @Component({
   selector: 'aap-applications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,
+    ApplicationDetailsComponent
+  ],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.css'
 })
@@ -25,7 +28,7 @@ export class ApplicationsComponent implements OnInit{
     return this.applications;
   }
 
-  withdrawButtonClicked( app: IApplication){
+  withdrawApplication( app: IApplication){
     console.log("withdraw btn clicked on application " + app.id);
 
     if(app.isAccepted === null){
