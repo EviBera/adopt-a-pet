@@ -20,9 +20,18 @@ export class ApplicationsComponent implements OnInit{
 
   ngOnInit(): void {
     this.appSvc.getApplications().subscribe({
-      next: (applications) => (this.applications = applications)
+      next: (applications) => (this.applications = this.sortApplications(applications))
     })
   }
+
+  sortApplications(applications: IApplication[]): IApplication[] {
+    return applications.sort((a, b) => {
+        if (a.isAccepted === null && b.isAccepted !== null) return -1;
+        if (a.isAccepted !== null && b.isAccepted === null) return 1;
+
+        return b.id - a.id;
+    });
+}
 
   get applicationList(){
     return this.applications;
