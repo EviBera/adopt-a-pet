@@ -1,14 +1,36 @@
 <h1>My applications:</h1>
+<hr>
 <h2 data-test="not-have-applications" *ngIf="applicationList.length === 0">
     You haven't handed in an application to adopt a pet yet.
 </h2>
 <ul data-test="application-list" *ngIf="applicationList.length > 0">
     <li *ngFor="let app of applicationList">
-        <div data-test="app-id">app id: {{app.id}}</div>
-        <div data-test="app-accepted">
-            <p *ngIf="app.isAccepted">accepted</p>
-            <p *ngIf="app.isAccepted === false">refused</p>
-            <p *ngIf="app.isAccepted === null">not decided yet</p>
+        <h3 data-test="pet-name">The pet: {{ app.petName }}</h3>
+        <div class="flex-container">
+            <div class="left-side">
+                <div>
+                    <img data-test="pet-picture" [src]="app.petPictureLink" [alt]="app.petName" />
+                </div>
+                <div data-test="pet-deteils">
+                    <p data-test="neutered-pet" *ngIf="app.petIsNeutered">A neutered {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
+                        }}.
+                    </p>
+                    <p data-test="fertile-pet" *ngIf="!app.petIsNeutered">A fertile {{ app.petGender | lowercase }} {{ app.petSpecies| lowercase
+                        }}.
+                    </p>
+                    <p data-test="pet-birth">Estimated birth: {{ app.petBirth | date: 'dd/MM/yyyy' }}</p>
+                    <p data-test="deadline">Deadline of application: {{app.advertisementExpiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
+                </div>
+            </div>
+            <div data-test="btn-container">
+                <button data-test="withdraw-btn" [ngClass]="{ disabled: app.isAccepted !== null}" (click)="withdrawButtonClicked(app)">Withdraw my application</button>
+            </div>
+        </div>
+
+        <div data-test="app-acceptance" class="result">
+            <p data-test="accepted" *ngIf="app.isAccepted">Application is accepted.</p>
+            <p data-test="refused" *ngIf="app.isAccepted === false">Application is refused.</p>
+            <p data-test="not-decided" *ngIf="app.isAccepted === null">There wasn't a decision yet.</p>
         </div>
         <hr>
     </li>

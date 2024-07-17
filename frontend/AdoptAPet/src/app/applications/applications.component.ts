@@ -25,4 +25,16 @@ export class ApplicationsComponent implements OnInit{
     return this.applications;
   }
 
+  withdrawButtonClicked( app: IApplication){
+    console.log("withdraw btn clicked on application " + app.id);
+
+    if(app.isAccepted === null){
+      this.appSvc.withdraw(app.id);
+    }
+    else {
+      alert("You can not withdraw this application.");
+    }
+    
+  }
+
 }
