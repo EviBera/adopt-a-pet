@@ -2,11 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IApplication } from '../models/application.model';
 import { AppService } from './app.service';
+import { ApplicationDetailsComponent } from '../application-details/application-details.component';
 
 @Component({
   selector: 'aap-applications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,
+    ApplicationDetailsComponent
+  ],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.css'
 })
@@ -17,15 +20,24 @@ export class ApplicationsComponent implements OnInit{
 
   ngOnInit(): void {
     this.appSvc.getApplications().subscribe({
-      next: (applications) => (this.applications = applications)
+      next: (applications) => (this.applications = this.sortApplications(applications))
     })
   }
+
+  sortApplications(applications: IApplication[]): IApplication[] {
+    return applications.sort((a, b) => {
+        if (a.isAccepted === null && b.isAccepted !== null) return -1;
+        if (a.isAccepted !== null && b.isAccepted === null) return 1;
+
+        return b.id - a.id;
+    });
+}
 
   get applicationList(){
     return this.applications;
   }
 
-  withdrawButtonClicked( app: IApplication){
+  withdrawApplication( app: IApplication){
     console.log("withdraw btn clicked on application " + app.id);
 
     if(app.isAccepted === null){

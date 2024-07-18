@@ -6,17 +6,3 @@ ul {
     margin-top: 40px;
 }
 
-.result {
-    font-weight: bold;
-}
-
-img {
-    max-width: 100px;
-    height: auto;
-    margin: 10px;
-}
-
-.left-side {
-    display: flex;
-    gap: 80px;
-}
