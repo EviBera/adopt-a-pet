@@ -98,7 +98,10 @@ public class ApplicationRepository : IApplicationRepository
     
     public async Task<Application> UpdateAsync(int applicationId, UpdateApplicationRequestDto requestDto)
     {
-        var app = await _dbContext.Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
+        var app = await _dbContext.Applications
+            .Include(a => a.Advertisement)
+            .ThenInclude(advertisement => advertisement.Pet)
+            .FirstOrDefaultAsync(a => a.Id == applicationId);
         if (app == null)
         {
             throw new RowNotInTableException();

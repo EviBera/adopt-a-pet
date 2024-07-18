@@ -2,7 +2,7 @@
 
 ## About the project
 
-This application helps an imaginary pet rescue team to find adopters for stray animals. I have collaborated with [Ildikó Földi Krizsán](https://github.com/FoldiKrizsanIldiko) who has tested the application.
+This application helps an imaginary pet rescue team to find adopters for stray animals. I have collaborated with [Ildikó Földi Krizsán](https://github.com/FoldiKrizsanIldiko) who has [tested](https://github.com/FoldiKrizsanIldiko/adoptAPet) the application.
 
 
 
@@ -33,6 +33,5 @@ I used the official Docker instance.
 #### Frontend
 
 ![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white) 18
-
 
 
