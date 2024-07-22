@@ -11,6 +11,6 @@
             <p data-test="advertisement-expires">The advertisement expires at: {{ad.expiresAt | date: 'dd/MM/yyyy hh:mm'}}</p>
         </div>
     </div>
-    <button data-test="adopt-button" (click)="adoptButtonClicked(ad)">I'd like to adopt</button>
+    <button data-test="adopt-button" (click)="adoptButtonClicked(ad)" [class.disabled]="hasApplication(ad)">I'd like to adopt</button>
 </div>
 <hr>
