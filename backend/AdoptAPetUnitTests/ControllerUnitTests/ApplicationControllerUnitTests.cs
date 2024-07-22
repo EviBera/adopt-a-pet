@@ -515,7 +515,7 @@ public class ApplicationControllerUnitTests
         _repositoryMock.Setup(repo => repo.DeleteAsync(applicationId)).Returns(Task.CompletedTask);
         
         //Act
-        var result = await _controller.DelateAsync(applicationId);
+        var result = await _controller.DeleteAsync(applicationId);
         
         //Assert
         Assert.IsNotNull(result);
@@ -534,7 +534,7 @@ public class ApplicationControllerUnitTests
             .ThrowsAsync(new RowNotInTableException());
         
         //Act
-        var result = await _controller.DelateAsync(nonExistentApplicationId);
+        var result = await _controller.DeleteAsync(nonExistentApplicationId);
         
         //Assert
         Assert.IsNotNull(result);
@@ -555,7 +555,7 @@ public class ApplicationControllerUnitTests
             .ThrowsAsync(new Exception(exceptionMessage));
         
         //Act
-        var result = await _controller.DelateAsync(applicationId);
+        var result = await _controller.DeleteAsync(applicationId);
         
         //Assert
         Assert.IsNotNull(result);

@@ -109,4 +109,82 @@ public class AuthControllerUnitTests
         Assert.That(objectResult.Value, Is.EqualTo(errors));
         _userManagerMock.Verify(um => um.CreateAsync(It.IsAny<User>(), inputData.Password), Times.Once);
     }
+
+    [Test]
+    public async Task DeleteAsync_ReturnsStatusCode204_IfDeletionIsSuccessful()
+    {
+        //Arrange
+        var userId = "testUserId";
+        var user = new User { Id = userId };
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync(user);
+        _userManagerMock.Setup(um => um.DeleteAsync(user)).ReturnsAsync(IdentityResult.Success);
+        
+        //Act
+        var result = await _controller.DeleteAsync(userId);
+        
+        //Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.InstanceOf<NoContentResult>());
+    }
+    
+    [Test]
+    public async Task DeleteAsync_ReturnsNotFound_IfUserDoesNotExist()
+    {
+        // Arrange
+        var userId = "nonexistentUserId";
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync((User?)null);
+
+        // Act
+        var result = await _controller.DeleteAsync(userId);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        var notFoundResult = result as NotFoundObjectResult;
+        Assert.That(notFoundResult?.Value, Is.EqualTo("The user does not exist"));
+    }
+    
+    [Test]
+    public async Task DeleteAsync_ReturnsStatusCode500_IfDeletionFails()
+    {
+        // Arrange
+        var userId = "testUserId";
+        var user = new User { Id = userId };
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync(user);
+        _userManagerMock.Setup(um => um.DeleteAsync(user)).ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Deletion failed" }));
+
+        // Act
+        var result = await _controller.DeleteAsync(userId);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.InstanceOf<ObjectResult>());
+        var objectResult = result as ObjectResult;
+        Assert.Multiple(() =>
+        {
+            Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
+            Assert.That(objectResult?.Value, Is.EqualTo("Something went wrong, please try again later."));
+        });
+    }
+
+    [Test]
+    public async Task DeleteAsync_ReturnsStatusCode500_IfExceptionIsThrown()
+    {
+        // Arrange
+        var userId = "testUserId";
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ThrowsAsync(new Exception("Unexpected error"));
+
+        // Act
+        var result = await _controller.DeleteAsync(userId);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.InstanceOf<ObjectResult>());
+        var objectResult = result as ObjectResult;
+        Assert.Multiple(() =>
+        {
+            Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
+            Assert.That(objectResult?.Value, Is.EqualTo("Unexpected error"));
+        });
+    }
 }

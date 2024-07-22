@@ -76,4 +76,27 @@ public class AuthController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+
+    [HttpDelete("{userId}")]
+    public async Task<ActionResult> DeleteAsync([FromRoute] string userId)
+    {
+        try
+        {
+            User? user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("The user does not exist");
+            }
+            
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded ? NoContent() : StatusCode(500, "Something went wrong, please try again later.");
+            
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error deleting user.");
+            return StatusCode(500, e.Message);
+        }
+    }
 }

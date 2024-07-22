@@ -85,4 +85,19 @@ public class AdvertisementController : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+
+    [HttpDelete("{advertisementId:int}")]
+    public async Task<ActionResult> DeleteAsync([FromRoute] int advertisementId)
+    {
+        try
+        {
+            await _repository.DeleteAsync(advertisementId);
+            return NoContent();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Failed to delete the advertisement.");
+            return e is RowNotInTableException ? BadRequest("Invalid advertisement id.") : StatusCode(500, e.Message);
+        }
+    }
 }

@@ -339,8 +339,8 @@ public class AdvertisementControllerUnitTests
         var actionResult = result.Result as CreatedAtActionResult;
         Assert.That(actionResult?.ActionName, Is.EqualTo("GetById"));
         Assert.That(actionResult?.RouteValues["advertisementId"], Is.EqualTo(expectedData.Id));
-        var returnedData = actionResult.Value as AdvertisementDto;
-        Assert.That(returnedData.ExpiresAt, Is.EqualTo(expectedData.ExpiresAt));
+        var returnedData = actionResult?.Value as AdvertisementDto;
+        Assert.That(returnedData!.ExpiresAt, Is.EqualTo(expectedData.ExpiresAt));
         Assert.That(returnedData.CreatedAt, Is.EqualTo(expectedData.CreatedAt));
         _repositoryMock.Verify(repo => repo.CreateAsync(inputData), Times.Once);
     }
@@ -364,7 +364,7 @@ public class AdvertisementControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(400));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(400));
         Assert.That(actionResult.Value.ToString().Contains("The pet does not exist."));
         _repositoryMock.Verify(repo => repo.CreateAsync(inputDataWithNonexistentPet), Times.Once);
     }
@@ -389,8 +389,67 @@ public class AdvertisementControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(500));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(500));
         Assert.That(actionResult.Value.ToString().Contains(exceptionMessage));
         _repositoryMock.Verify(repo => repo.CreateAsync(inputData), Times.Once);
+    }
+
+    [Test]
+    public async Task DeleteAsync_ReturnsStatusCode204_IfRepositoryDoesNotThrowException()
+    {
+        //Arrange
+        var advertisementId = 17;
+        _repositoryMock.Setup(repo => repo.DeleteAsync(advertisementId)).Returns(Task.CompletedTask);
+        
+        //Act
+        var result = await _controller.DeleteAsync(advertisementId);
+        
+        //Assert
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOf<NoContentResult>(result);
+        var noContentResult = result as NoContentResult;
+        Assert.That(noContentResult?.StatusCode, Is.EqualTo(204));
+        _repositoryMock.Verify(repo => repo.DeleteAsync(advertisementId), Times.Once);
+    }
+    
+    [Test]
+    public async Task DeleteAsync_ReturnsBadRequest_IfProvidedAdvertisementDoesNotExist()
+    {
+        //Arrange
+        var nonExistentAdvertisementId = 99999;
+        _repositoryMock.Setup(repo => repo.DeleteAsync(nonExistentAdvertisementId))
+            .ThrowsAsync(new RowNotInTableException());
+        
+        //Act
+        var result = await _controller.DeleteAsync(nonExistentAdvertisementId);
+        
+        //Assert
+        Assert.IsNotNull(result);
+        var actionResult = result as ObjectResult;
+        Assert.IsNotNull(actionResult);
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(400));
+        Assert.That(actionResult.Value.ToString().Contains("Invalid advertisement id."));
+        _repositoryMock.Verify(repo => repo.DeleteAsync(nonExistentAdvertisementId), Times.Once);
+    }
+    
+    [Test]
+    public async Task DeleteAsync_ReturnsInternalServerError_IfUnexpectedExceptionIsThrown()
+    {
+        //Arrange
+        var advertisementId = 21;
+        var exceptionMessage = "Test error message";
+        _repositoryMock.Setup(repo => repo.DeleteAsync(advertisementId))
+            .ThrowsAsync(new Exception(exceptionMessage));
+        
+        //Act
+        var result = await _controller.DeleteAsync(advertisementId);
+        
+        //Assert
+        Assert.IsNotNull(result);
+        var actionResult = result as ObjectResult;
+        Assert.IsNotNull(actionResult);
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(500));
+        Assert.That(actionResult.Value.ToString().Contains(exceptionMessage));
+        _repositoryMock.Verify(repo => repo.DeleteAsync(advertisementId), Times.Once);
     }
 }

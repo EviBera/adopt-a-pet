@@ -96,7 +96,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpDelete("{applicationId:int}")]
-    public async Task<ActionResult> DelateAsync([FromRoute] int applicationId)
+    public async Task<ActionResult> DeleteAsync([FromRoute] int applicationId)
     {
         try
         {
