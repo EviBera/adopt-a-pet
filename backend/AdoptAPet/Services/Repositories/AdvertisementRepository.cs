@@ -28,6 +28,7 @@ public class AdvertisementRepository : IAdvertisementRepository
     public async Task<IEnumerable<AdvertisementDto>> GetCurrentAdsAsync()
     {
         var ads = await _dbContext.Advertisements
+            .Where(a => a.ExpiresAt > DateTime.UtcNow)
             .Include(a => a.Pet)
             .Include(a => a.Applications)
             .Where(ad => ad.Pet.Owner == null)
