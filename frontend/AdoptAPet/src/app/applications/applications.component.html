@@ -1,9 +1,10 @@
 <h1>My applications:</h1>
 <div class="filter">
-    Show:
-    <span *ngFor="let filterValue of filterValues">
-        <input type="radio" [value]="filterValue.value" (change)="filter = filterValue.value" name="filterValue.title">{{filterValue.title}}
-    </span>
+    <strong>Show:</strong>
+    <label *ngFor="let filterValue of filterValues" class="radiobtn-container">{{filterValue.title}}
+        <input type="radio" [value]="filterValue.value" [(ngModel)]="filter" name="filterValue.title">
+        <span class="checkmark"></span>
+    </label>
 </div>
 <hr>
 <h2 data-test="not-have-applications" *ngIf="applicationList.length === 0">

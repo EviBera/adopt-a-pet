@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 export class ApplicationsComponent implements OnInit{
   private applications: IApplication[] = [];
   filterValues = filterValues;
-  filter: string = 'all';
+  filter: string = filterValues[0].value;
 
   constructor(private appSvc: AppService){}
 
