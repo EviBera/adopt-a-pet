@@ -47,6 +47,16 @@ button.disabled:hover {
     cursor: not-allowed;
 }
 
+h2 {
+    text-align: center;
+}
+
+.filter {
+    font-size: larger;
+    margin-left: 20px;
+}
+
+
 @media (max-width: 768px) {
     .flex-container {
       flex-direction: column;

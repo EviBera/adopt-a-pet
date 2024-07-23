@@ -10,11 +10,6 @@ strong {
     margin-right: 10px;
 }
 
-.filter {
-    font-size: larger;
-    margin-left: 20px;
-}
-
 .radiobtn-container {
     cursor: pointer;
     position: relative;

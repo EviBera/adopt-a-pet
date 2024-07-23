@@ -1,0 +1,9 @@
+select {
+    margin-left: 20px;
+    font-size: larger;
+    font-family: inherit;
+}
+
+option:hover{
+    background-color: #b35900;
+}
