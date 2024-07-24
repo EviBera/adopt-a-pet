@@ -54,7 +54,7 @@ public class AuthController : ControllerBase
 
             if (newUser.Succeeded)
             {
-                return Ok(new NewUserDto
+                return CreatedAtAction("GetById", new {userId = user.Id}, new NewUserDto
                 {
                     Id = user.Id,
                     UserName = user.Email,
