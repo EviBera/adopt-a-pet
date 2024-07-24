@@ -1,4 +1,11 @@
 <h1>My applications:</h1>
+<div class="filter">
+    <strong>Show:</strong>
+    <label *ngFor="let filterValue of filterValues" class="radiobtn-container">{{filterValue.title}}
+        <input type="radio" [value]="filterValue.value" [(ngModel)]="filter" name="filterValue.title">
+        <span class="checkmark"></span>
+    </label>
+</div>
 <hr>
 <h2 data-test="not-have-applications" *ngIf="applicationList.length === 0">
     You haven't handed in an application to adopt a pet yet.

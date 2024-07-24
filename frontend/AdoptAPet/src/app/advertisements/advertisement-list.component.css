@@ -1,0 +1,12 @@
+select {
+    margin-left: 20px;
+    font-size: larger;
+    font-family: inherit;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+option:hover {
+    background-color: #b35900;
+    color: white;
+}

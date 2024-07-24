@@ -14,6 +14,12 @@ export class AdvertisementDetailsComponent {
   @Output() adopt = new EventEmitter();
 
   adoptButtonClicked(ad: IAdvertisement){
-    this.adopt.emit();
+    if(!this.hasApplication(ad))
+      this.adopt.emit();
+  }
+
+  hasApplication(ad: IAdvertisement){
+    let app = ad.applications.filter(app => app.userId === '711704b1-035f-4f76-99d9-a1dece06c153');
+    return app.length > 0;
   }
 }

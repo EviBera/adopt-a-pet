@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { IApplication } from '../models/application.model';
+import { IApplication, filterValues } from '../models/application.model';
 import { AppService } from './app.service';
 import { ApplicationDetailsComponent } from '../application-details/application-details.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'aap-applications',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
+    FormsModule,
     ApplicationDetailsComponent
   ],
   templateUrl: './applications.component.html',
@@ -15,6 +18,8 @@ import { ApplicationDetailsComponent } from '../application-details/application-
 })
 export class ApplicationsComponent implements OnInit{
   private applications: IApplication[] = [];
+  filterValues = filterValues;
+  filter: string = filterValues[0].value;
 
   constructor(private appSvc: AppService){}
 
@@ -31,22 +36,28 @@ export class ApplicationsComponent implements OnInit{
 
         return b.id - a.id;
     });
-}
+  }
 
   get applicationList(){
-    return this.applications;
+    switch(this.filter){
+      case 'pending':
+        return this.applications.filter(a => a.isAccepted === null);
+      case 'accepted':
+        return this.applications.filter(a => a.isAccepted === true);
+      case 'refused':
+        return this.applications.filter(a => a.isAccepted === false);
+      default:
+        return this.applications;
+    }
   }
 
   withdrawApplication( app: IApplication){
-    console.log("withdraw btn clicked on application " + app.id);
-
     if(app.isAccepted === null){
       this.appSvc.withdraw(app.id);
     }
     else {
       alert("You can not withdraw this application.");
     }
-    
   }
 
 }

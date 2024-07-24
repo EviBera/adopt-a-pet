@@ -1,7 +1,17 @@
 <h1>Adoptable pets</h1>
+<div class="filter">
+    <strong>Show:</strong>
+    <select [(ngModel)]="filter" name="speciesValue" 
+        onfocus="this.size=3" onblur="this.size=0" onchange="this.size=1; this.blur()">
+        <option *ngFor="let speciesValue of speciesValues" [value]="speciesValue.value">{{speciesValue.title}}</option>
+    </select>
+</div>
 <hr>
+<h2 *ngIf="advertisementList.length === 0">
+    Sorry, we do not have adoptable {{filter}}.
+</h2>
 <ul data-test="adoptable-pets-list">
-    <li data-test="adoptable-pet-list-item" *ngFor="let ad of advertisements">
+    <li data-test="adoptable-pet-list-item" *ngFor="let ad of advertisementList">
         <aap-advertisement-details
         data-test="adoptable-pet"
         [ad]="ad"

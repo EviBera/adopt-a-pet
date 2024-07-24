@@ -12,3 +12,10 @@ export interface IApplication {
     petDescription: string,
     petPictureLink: string
 }
+
+export const filterValues = [
+    {title: 'All', value: 'all'},
+    {title: 'Pending', value: 'pending'},
+    {title: 'Accepted', value: 'accepted'},
+    {title: 'Refused', value: 'refused'},
+]
