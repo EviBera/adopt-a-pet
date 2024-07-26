@@ -43,7 +43,7 @@ public class AuthControllerUnitTests
     }
 
     [Test]
-    public async Task RegisterAsync_ReturnsOk_IfRegistrationIsSuccessful()
+    public async Task RegisterAsync_ReturnsStatusCode201_IfRegistrationIsSuccessful()
     {
         //Arrange
         var inputData = new RegisterUserRequestDto
@@ -71,8 +71,8 @@ public class AuthControllerUnitTests
         
         //Assert
         Assert.IsNotNull(result);
-        Assert.That(result, Is.TypeOf<OkObjectResult>());
-        var returnedData = (result as OkObjectResult).Value as NewUserDto;
+        Assert.That(result, Is.TypeOf<CreatedAtActionResult>());
+        var returnedData = (result as CreatedAtActionResult).Value as NewUserDto;
         Assert.IsNotNull(returnedData);
         Assert.That(returnedData.Id, Is.EqualTo(expectedData.Id));
         Assert.That(returnedData.FirstName, Is.EqualTo(expectedData.FirstName));
