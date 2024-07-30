@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace AdoptAPet.DTOs.User;
@@ -14,7 +15,10 @@ public class RegisterUserRequestDto
     [MaxLength(50, ErrorMessage = "Email cannot be longer than 50 characters.")]
     [EmailAddress (ErrorMessage = "Must be valid email format.")]
     public string Email { get; set; } = string.Empty;
+
     [Required]
     [MaxLength(30, ErrorMessage = "Password cannot be longer than 30 characters.")]
     public string Password { get; set; } = string.Empty;
+    [DefaultValue(false)]
+    public bool IsStaff { get; set; }
 }
