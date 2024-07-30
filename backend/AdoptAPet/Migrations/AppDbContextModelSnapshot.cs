@@ -216,6 +216,26 @@ namespace AdoptAPet.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "4553e464-f69e-45df-86b9-d6583eebcc9d",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "e7f7d65d-bc88-41fd-9000-1563cfea1e93",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "ab19b7fe-b11b-4225-90da-834a89a8081e",
+                            Name = "Rescue Team",
+                            NormalizedName = "RESCUE TEAM"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

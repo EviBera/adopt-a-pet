@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using AdoptAPet.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,27 @@ public class AppDbContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
         
+        List<IdentityRole> roles =
+        [
+            new IdentityRole
+            {
+                Name = "Admin",
+                NormalizedName = "ADMIN"
+            },
+
+            new IdentityRole
+            {
+                Name = "User",
+                NormalizedName = "USER"
+            },
+
+            new IdentityRole
+            {
+                Name = "Rescue Team",
+                NormalizedName = "RESCUE TEAM"
+            }
+        ];
+        modelBuilder.Entity<IdentityRole>().HasData(roles);
 
         // Configure one-to-many relationship between Pet and Advertisement
         modelBuilder.Entity<Pet>()
