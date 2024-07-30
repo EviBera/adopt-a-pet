@@ -16,8 +16,9 @@ public class AuthControllerUnitTests
 {
     private Mock<UserManager<User>> _userManagerMock;
     private Mock<SignInManager<User>> _signInManagerMock;
-    private Mock<ILogger<AuthController>> _loggerMock;
+    private ILogger<AuthController> _logger;
     private AuthController _controller;
+    private Mock<IUrlHelper> _urlHelperMock;
 
     [SetUp]
     public void Setup()
@@ -38,8 +39,22 @@ public class AuthControllerUnitTests
             schemesMock.Object,
             null);
         
-        _loggerMock = new Mock<ILogger<AuthController>>();
-        _controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _loggerMock.Object);
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddConsole()
+                .AddDebug();
+        });
+        _logger = loggerFactory.CreateLogger<AuthController>();
+        
+        // Mock URL Helper
+        _urlHelperMock = new Mock<IUrlHelper>();
+        _urlHelperMock.Setup(x => x.Link(It.IsAny<string>(), It.IsAny<object>())).Returns("http://localhost");
+     
+        _controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _logger)
+        {
+            Url = _urlHelperMock.Object
+        };
     }
 
     [Test]
@@ -51,7 +66,8 @@ public class AuthControllerUnitTests
             FirstName = "Test Firstname",
             LastName = "Test Lastname",
             Email = "test@email.com",
-            Password = "Password!0"
+            Password = "Password!0",
+            IsStaff = false
         };
         var expectedData = new User
         {
@@ -61,26 +77,39 @@ public class AuthControllerUnitTests
             Email = "test@email.com",
             UserName = "test@email.com"
         };
+        
+        var expectedRoles = new List<string> { "User" };
 
         _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<User>(), inputData.Password))
             .ReturnsAsync(IdentityResult.Success)
             .Callback<User, string>((u, p) => u.Id = expectedData.Id);
+        
+        _userManagerMock.Setup(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(IdentityResult.Success);
+        
+        _userManagerMock.Setup(um => um.GetRolesAsync(It.IsAny<User>()))
+            .ReturnsAsync(expectedRoles);
+        
+        _controller.ModelState.Clear();
         
         //Act
         var result = await _controller.RegisterAsync(inputData);
         
         //Assert
         Assert.IsNotNull(result);
-        Assert.That(result, Is.TypeOf<CreatedAtActionResult>());
-        var returnedData = (result as CreatedAtActionResult).Value as NewUserDto;
-        Assert.IsNotNull(returnedData);
+        Assert.That(result, Is.TypeOf<CreatedAtActionResult>(), $"Expected CreatedAtActionResult, but got {result.GetType()}");
+        var createdAtActionResult = result as CreatedAtActionResult;
+        var returnedData = createdAtActionResult?.Value as NewUserDto;
+        Assert.IsNotNull(returnedData, "Returned data is null");
         Assert.That(returnedData.Id, Is.EqualTo(expectedData.Id));
         Assert.That(returnedData.FirstName, Is.EqualTo(expectedData.FirstName));
         Assert.That(returnedData.LastName, Is.EqualTo(expectedData.LastName));
         Assert.That(returnedData.Email, Is.EqualTo(expectedData.Email));
         Assert.That(returnedData.UserName, Is.EqualTo(expectedData.UserName));
-        Assert.That(returnedData.Token, Is.EqualTo(string.Empty));
+        Assert.That(returnedData.Role, Is.EqualTo(expectedRoles[0]));
         _userManagerMock.Verify(um => um.CreateAsync(It.IsAny<User>(), inputData.Password), Times.Once);
+        _userManagerMock.Verify(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Once);
+        _userManagerMock.Verify(um => um.GetRolesAsync(It.IsAny<User>()), Times.Once);
     }
 
     [Test]
@@ -109,6 +138,82 @@ public class AuthControllerUnitTests
         Assert.That(objectResult.Value, Is.EqualTo(errors));
         _userManagerMock.Verify(um => um.CreateAsync(It.IsAny<User>(), inputData.Password), Times.Once);
     }
+    
+    [Test]
+    public async Task RegisterAsync_ReturnsBadRequest_IfModelStateIsInvalid()
+    {
+        // Arrange
+        var inputData = new RegisterUserRequestDto
+        {
+            FirstName = "Test Firstname",
+            LastName = "Test Lastname",
+            Email = "test@email.com",
+            Password = "Password!0",
+            IsStaff = false
+        };
+
+        _controller.ModelState.AddModelError("Email", "Email is required");
+
+        // Act
+        var result = await _controller.RegisterAsync(inputData);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result, Is.TypeOf<BadRequestObjectResult>(), $"Expected BadRequestObjectResult, but got {result.GetType()}");
+
+        var badRequestResult = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequestResult?.Value, "BadRequest result value is null");
+
+        var modelState = badRequestResult?.Value as SerializableError;
+        Assert.IsTrue(modelState?.ContainsKey("Email"), "ModelState does not contain expected error key");
+    }
+
+    [Test]
+    public async Task RegisterAsync_ReturnsInternalServerError_IfRoleAssignmentFails()
+    {
+        // Arrange
+        var inputData = new RegisterUserRequestDto
+        {
+            FirstName = "Test Firstname",
+            LastName = "Test Lastname",
+            Email = "test@email.com",
+            Password = "Password!0",
+            IsStaff = false
+        };
+        var expectedData = new User
+        {
+            Id = "Test UserId",
+            FirstName = "Test Firstname",
+            LastName = "Test Lastname",
+            Email = "test@email.com",
+            UserName = "test@email.com"
+        };
+
+        _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<User>(), inputData.Password))
+            .ReturnsAsync(IdentityResult.Success)
+            .Callback<User, string>((u, p) => u.Id = expectedData.Id);
+
+        _userManagerMock.Setup(um => um.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(IdentityResult.Failed(new IdentityError { Description = "Role assignment failed" }));
+
+        _controller.ModelState.Clear();
+
+        // Act
+        var result = await _controller.RegisterAsync(inputData);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result, Is.TypeOf<ObjectResult>(), $"Expected ObjectResult, but got {result.GetType()}");
+
+        var objectResult = result as ObjectResult;
+        Assert.That(objectResult?.StatusCode, Is.EqualTo(500), "Expected status code 500");
+        Assert.IsNotNull(objectResult?.Value, "ObjectResult value is null");
+
+        var errors = objectResult?.Value as IEnumerable<IdentityError>;
+        Assert.IsNotNull(errors, "Errors should not be null");
+        Assert.IsTrue(errors?.Any(e => e.Description == "Role assignment failed"), "Expected error description not found");
+    }
+
 
     [Test]
     public async Task DeleteAsync_ReturnsStatusCode204_IfDeletionIsSuccessful()

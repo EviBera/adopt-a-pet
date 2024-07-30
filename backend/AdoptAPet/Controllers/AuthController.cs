@@ -42,6 +42,7 @@ public class AuthController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogError("Model state is invalid: {ModelStateErrors}", ModelState.Values.SelectMany(v => v.Errors));
             return BadRequest(ModelState);
         }
         
@@ -59,6 +60,8 @@ public class AuthController : ControllerBase
 
             if (newUser.Succeeded)
             {
+                _logger.LogInformation("User created successfully: {UserId}", user.Id);
+                
                 var roleResult = requestDto.IsStaff
                     ? await _userManager.AddToRoleAsync(user, "Rescue Team")
                     : await _userManager.AddToRoleAsync(user, "User");
@@ -67,24 +70,37 @@ public class AuthController : ControllerBase
                 {
                     var roles = await _userManager.GetRolesAsync(user);
                     
-                    return CreatedAtAction("GetById", new {userId = user.Id}, new NewUserDto
-                                    {
-                                        Id = user.Id,
-                                        UserName = user.Email,
-                                        Email = user.Email,
-                                        FirstName = user.FirstName,
-                                        LastName = user.LastName,
-                                        Role = roles[0]
-                                    });
+                    if (roles == null || roles.Count == 0)
+                    {
+                        _logger.LogError("Roles are null or empty for user: {UserId}", user.Id);
+                        return StatusCode(500, "Roles are null or empty.");
+                    }
+
+                    _logger.LogInformation("Roles assigned to user: {Roles}", string.Join(", ", roles));
+
+                    var newUserDto = new NewUserDto
+                    {
+                        Id = user.Id,
+                        UserName = user.Email,
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Role = roles[0]
+                    };
+                    _logger.LogInformation("NewUserDto created: {@NewUserDto}", newUserDto);
+
+                    return CreatedAtAction("GetById", new { userId = user.Id }, newUserDto);
                 }
                 else
                 {
+                    _logger.LogError("Failed to add user to role: {Errors}", roleResult.Errors);
                     return StatusCode(500, roleResult.Errors);
                 }
                 
             }
             else
             {
+                _logger.LogError("Failed to create user: {Errors}", newUser.Errors);
                 return StatusCode(500, newUser.Errors);
             }
         }
