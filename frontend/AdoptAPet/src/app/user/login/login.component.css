@@ -1,0 +1,25 @@
+.container{
+    border: 1px solid black;
+    width: 500px;
+    max-width: 90%;
+    justify-content: center;
+    margin: 100px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+input {
+    font-size: larger;
+    width: 80%;
+    padding: 10px;
+}
+
+em {
+    display: block;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.input-section{
+    margin-bottom: 20px;
+}
