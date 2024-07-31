@@ -14,7 +14,7 @@ public class CreatePetRequestDto
     public Gender Gender { get; init; }
     public bool IsNeutered { get; set; }
     [MaxLength(500)] public string Description { get; set; } = String.Empty;
-    [MaxLength(200)]
+    [MaxLength(2000)]
     [Required]
     public string PictureLink { get; set; } = String.Empty;
 }
