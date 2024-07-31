@@ -18,7 +18,6 @@ public class AuthControllerUnitTests
     private Mock<SignInManager<User>> _signInManagerMock;
     private ILogger<AuthController> _logger;
     private AuthController _controller;
-    private Mock<IUrlHelper> _urlHelperMock;
 
     [SetUp]
     public void Setup()
@@ -47,13 +46,8 @@ public class AuthControllerUnitTests
         });
         _logger = loggerFactory.CreateLogger<AuthController>();
         
-        // Mock URL Helper
-        _urlHelperMock = new Mock<IUrlHelper>();
-        _urlHelperMock.Setup(x => x.Link(It.IsAny<string>(), It.IsAny<object>())).Returns("http://localhost");
-     
         _controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _logger)
         {
-            Url = _urlHelperMock.Object
         };
     }
 
@@ -291,5 +285,69 @@ public class AuthControllerUnitTests
             Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
             Assert.That(objectResult?.Value, Is.EqualTo("Unexpected error"));
         });
+    }
+    
+    [Test]
+    public async Task GetByIdAsync_ReturnsUser_IfUserExists()
+    {
+        // Arrange
+        var userId = "testUserId";
+        var user = new User { Id = userId, UserName = "testUser" };
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync(user);
+
+        // Act
+        var result = await _controller.GetByIdAsync(userId);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
+        var okResult = result.Result as OkObjectResult;
+        Assert.IsNotNull(okResult?.Value);
+        Assert.That(okResult?.Value, Is.EqualTo(user));
+    }
+
+    [Test]
+    public async Task GetByIdAsync_ReturnsNotFound_IfUserDoesNotExist()
+    {
+        // Arrange
+        var userId = "nonexistentUserId";
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync((User?)null);
+
+        // Act
+        var result = await _controller.GetByIdAsync(userId);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.Result, Is.TypeOf<NotFoundResult>());
+    }
+
+    [Test]
+    public async Task GetByIdAsync_ReturnsStatusCode500_IfExceptionIsThrown()
+    {
+        // Arrange
+        var userId = "testUserId";
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ThrowsAsync(new Exception("Unexpected error"));
+
+        // Act
+        var result = await _controller.GetByIdAsync(userId);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.Result, Is.TypeOf<ObjectResult>());
+        var objectResult = result.Result as ObjectResult;
+        Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
+        Assert.That(objectResult?.Value, Is.EqualTo("Unexpected error"));
+    }
+    
+    [Test]
+    public async Task LogoutAsync_ReturnsOk_IfLogoutIsSuccessful()
+    {
+        // Act
+        var result = await _controller.LogoutAsync();
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result, Is.TypeOf<OkResult>());
+        _signInManagerMock.Verify(sm => sm.SignOutAsync(), Times.Once);
     }
 }
