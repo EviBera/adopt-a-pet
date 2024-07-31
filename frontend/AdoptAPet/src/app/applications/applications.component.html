@@ -8,7 +8,7 @@
 </div>
 <hr>
 <h2 data-test="not-have-applications" *ngIf="applicationList.length === 0">
-    You haven't handed in an application to adopt a pet yet.
+    You don't have a pending application.
 </h2>
 <ul data-test="application-list" *ngIf="applicationList.length > 0">
     <li data-test="application-list-item" *ngFor="let app of applicationList">

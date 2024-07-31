@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AdvertisementListComponent } from './advertisements/advertisement-list.component';
 import { ApplicationsComponent } from './applications/applications.component';
+import { LoginComponent } from './user/login/login.component';
+import { RegisterComponent } from './user/register/register.component';
 
 export const routes: Routes = [
     {
@@ -18,6 +20,16 @@ export const routes: Routes = [
         path: 'applications',
         component: ApplicationsComponent,
         title: 'My applications'
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
+        title: "Login"
+    },
+    {
+        path: 'register',
+        component: RegisterComponent,
+        title: "Register"
     },
     {
         path: '',
