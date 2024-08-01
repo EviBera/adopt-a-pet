@@ -23,3 +23,9 @@ em {
 .input-section{
     margin-bottom: 20px;
 }
+
+.login-error {
+    font-weight: bold;
+    border: 2px solid black;
+    background-color: #ff3300;
+}
