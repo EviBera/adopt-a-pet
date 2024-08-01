@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { IUserCredentials } from '../user.model';
+import { IUserCredentials } from '../../models/user.model';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
 

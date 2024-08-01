@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { IUser, IUserCredentials } from './user.model';
+import { IUser, IUserCredentials } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
