@@ -4,6 +4,7 @@ import { AdvertisementListComponent } from './advertisements/advertisement-list.
 import { ApplicationsComponent } from './applications/applications.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegisterComponent } from './user/register/register.component';
+import { LogoutComponent } from './user/logout/logout.component';
 
 export const routes: Routes = [
     {
@@ -30,6 +31,11 @@ export const routes: Routes = [
         path: 'register',
         component: RegisterComponent,
         title: "Register"
+    },
+    {
+        path: 'logout',
+        component: LogoutComponent,
+        title: "Logout"
     },
     {
         path: '',
