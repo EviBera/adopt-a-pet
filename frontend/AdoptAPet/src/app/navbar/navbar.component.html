@@ -2,10 +2,13 @@
     <div data-test="links-left" class="left">
         <a data-test="link-home" routerLink="/home" routerLinkActive="active">Home</a>
         <a data-test="link-adopt" routerLink="/adopt" routerLinkActive="active">Adoptable pets</a>
-        <a data-test="link-applications" routerLink="/applications" routerLinkActive="active">My applications</a>
+        <a data-test="link-applications" routerLink="/applications" routerLinkActive="active" *ngIf="user">My applications</a>
     </div>
-    <div data-test="links-right" class="right">
+    <div data-test="links-right-without-user" class="right" *ngIf="!user">
         <a data-test="link-login" routerLink="/login" routerLinkActive="active">Login</a>
         <a data-test="link-register" routerLink="/register" routerLinkActive="active">Register</a>
+    </div>
+    <div data-test="links-right-has-user" class="right" *ngIf="user">
+        <a data-test="link-logout" routerLink="/logout" routerLinkActive="active">Logout</a>
     </div>
 </div>
