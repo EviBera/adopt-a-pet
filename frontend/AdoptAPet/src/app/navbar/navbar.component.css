@@ -13,6 +13,17 @@ a {
     padding: 5px;
 }
 
+.right {
+    display: flex;
+}
+
+p {
+    margin: 0;
+    font-size: large;
+    font-weight: bold;
+    padding-top: 10px;
+}
+
 @media (max-width: 425px) {
 
     .left {

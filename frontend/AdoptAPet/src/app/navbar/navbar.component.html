@@ -9,6 +9,7 @@
         <a data-test="link-register" routerLink="/register" routerLinkActive="active">Register</a>
     </div>
     <div data-test="links-right-has-user" class="right" *ngIf="user">
+        <p data-test="hello">Hello, {{user.firstName}}!</p>
         <a data-test="link-logout" routerLink="/logout" routerLinkActive="active">Logout</a>
     </div>
 </div>
