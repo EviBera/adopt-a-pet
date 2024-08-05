@@ -1,4 +1,4 @@
-<div data-test="form-container" class="container">
+<div data-test="form-container" class="log-container">
     <form data-test="login-form" #loginForm="ngForm" class="form" (ngSubmit)="login(loginForm)">
         <div data-test="email-input-container" class="input-section">
             <input data-test="email-input" name="email" required email #email="ngModel" [(ngModel)]="credentials.email" placeholder="Email Address"

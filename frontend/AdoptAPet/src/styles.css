@@ -56,6 +56,16 @@ h2 {
     margin-left: 20px;
 }
 
+.log-container{
+    border: 1px solid black;
+    width: 500px;
+    max-width: 90%;
+    justify-content: center;
+    margin: 100px auto;
+    padding: 20px;
+    text-align: center;
+}
+
 
 @media (max-width: 768px) {
     .flex-container {
