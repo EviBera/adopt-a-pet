@@ -1,1 +1,14 @@
-<p>logout works!</p>
+<div data-test="logout-container" class="log-container" *ngIf="!message">
+    <div data-test="confirm-question" class="confirm">
+        Do you really want to log out?
+    </div>
+    <div data-test="logout-buttons">
+        <button data-test="yes-btn" (click)="logout()">Yes</button>
+        <button data-test="cancel-btn" (click)="cancel()">Cancel</button>
+    </div>
+</div>
+<div data-test="message-container" *ngIf="message" class="log-container">
+    <h2 data-test="message">
+        {{message}}
+    </h2>
+</div>
