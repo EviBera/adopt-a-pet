@@ -342,12 +342,32 @@ public class AuthControllerUnitTests
     [Test]
     public async Task LogoutAsync_ReturnsOk_IfLogoutIsSuccessful()
     {
+        //Arrange
+        _signInManagerMock.Setup(sm => sm.SignOutAsync()).Returns(Task.CompletedTask);
         // Act
         var result = await _controller.LogoutAsync();
 
         // Assert
         Assert.IsNotNull(result);
         Assert.That(result, Is.TypeOf<OkResult>());
+        _signInManagerMock.Verify(sm => sm.SignOutAsync(), Times.Once);
+    }
+
+    [Test]
+    public async Task LogoutAsync_ReturnsInternalServerError_IfLogoutIsUnsuccessful()
+    {
+        //Arrange
+        var exceptionMessage = "Logout failed.";
+        _signInManagerMock.Setup(sm => sm.SignOutAsync()).ThrowsAsync(new Exception(exceptionMessage));
+        
+        //Act
+        var result = await _controller.LogoutAsync();
+        
+        //Arrange
+        var objectResult = result as ObjectResult;
+        Assert.IsInstanceOf<ObjectResult>(result);
+        Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
+        Assert.That(objectResult?.Value, Is.EqualTo(exceptionMessage));
         _signInManagerMock.Verify(sm => sm.SignOutAsync(), Times.Once);
     }
 }

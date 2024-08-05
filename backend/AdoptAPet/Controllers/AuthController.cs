@@ -170,7 +170,15 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> LogoutAsync()
     {
-        await _signInManager.SignOutAsync();
-        return Ok();
+        try
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error at logout.");
+            return StatusCode(500, e.Message);
+        }
     }
 }
