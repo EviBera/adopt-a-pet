@@ -21,10 +21,7 @@ export class LoginComponent {
 
   constructor(private userSvc: UserService, private router: Router){}
 
-  login(form: NgForm){
-    console.log("Login button cliked.");
-    console.log(this.credentials);
-    
+  login(form: NgForm){  
     //login, then navigate to advertisements
     this.loginError = false;
     this.userSvc.login(this.credentials).subscribe({
