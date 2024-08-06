@@ -13,3 +13,10 @@ export interface IUser {
     password: string;
     rememberMe: boolean;
   }
+
+  export interface IUserRegistrationCredentials {
+    firstName: string;
+    lastname: string;
+    email: string;
+    password: string;
+  }
