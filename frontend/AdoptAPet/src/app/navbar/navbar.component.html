@@ -6,7 +6,7 @@
     </div>
     <div data-test="links-right-without-user" class="right" *ngIf="!user">
         <a data-test="link-login" routerLink="/login" routerLinkActive="active">Login</a>
-        <a data-test="link-register" routerLink="/register" routerLinkActive="active">Register</a>
+        <a data-test="link-registration" routerLink="/registration" routerLinkActive="active">Registration</a>
     </div>
     <div data-test="links-right-has-user" class="right" *ngIf="user">
         <p data-test="hello">Hello, {{user.firstName}}!</p>

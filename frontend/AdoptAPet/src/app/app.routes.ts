@@ -3,7 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { AdvertisementListComponent } from './advertisements/advertisement-list.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import { LoginComponent } from './user/login/login.component';
-import { RegisterComponent } from './user/register/register.component';
+import { RegistrationComponent } from './user/registration/registration.component';
 import { LogoutComponent } from './user/logout/logout.component';
 
 export const routes: Routes = [
@@ -28,9 +28,9 @@ export const routes: Routes = [
         title: "Login"
     },
     {
-        path: 'register',
-        component: RegisterComponent,
-        title: "Register"
+        path: 'registration',
+        component: RegistrationComponent,
+        title: "Registration"
     },
     {
         path: 'logout',
