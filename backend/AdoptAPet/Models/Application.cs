@@ -7,7 +7,6 @@ public class Application
     [Key]
     public int Id { get; set; }
     [MaxLength(100)]
-
     public string UserId { get; set; } = string.Empty;
     public User? User { get; set; }
     public int AdvertisementId { get; set; }
