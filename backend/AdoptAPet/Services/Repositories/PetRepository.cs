@@ -36,6 +36,7 @@ public class PetRepository : IPetRepository
     public async Task<Pet> CreateAsync(CreatePetRequestDto requestDto)
     {
         var newPet = requestDto.ToPetFromCreatePetRequestDto();
+        if (newPet == null) throw new Exception("Request resulted pet as null.");
         await _dbContext.Pets.AddAsync(newPet);
         await _dbContext.SaveChangesAsync();
 

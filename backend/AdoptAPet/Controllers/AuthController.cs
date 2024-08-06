@@ -143,6 +143,11 @@ public class AuthController : ControllerBase
         {
             return Unauthorized("Invalid email or password");
         }
+
+        if (user.UserName == null)
+        {
+            return BadRequest("Username is missing.");
+        }
         
         var result = await _signInManager.PasswordSignInAsync(user.UserName, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
 
