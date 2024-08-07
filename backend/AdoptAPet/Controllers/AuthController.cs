@@ -48,6 +48,12 @@ public class AuthController : ControllerBase
         
         try
         {
+            var userCheck = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == requestDto.Email);
+            if (userCheck != null)
+            {
+                return BadRequest(new { message = "A user with this email already exists." });
+            }
+            
             var user = new User
             {
                 UserName = requestDto.Email,
@@ -55,7 +61,7 @@ public class AuthController : ControllerBase
                 FirstName = requestDto.FirstName,
                 LastName = requestDto.LastName
             };
-
+            
             var newUser = await _userManager.CreateAsync(user, requestDto.Password);
 
             if (newUser.Succeeded)
@@ -73,7 +79,7 @@ public class AuthController : ControllerBase
                     if (roles == null || roles.Count == 0)
                     {
                         _logger.LogError("Roles are null or empty for user: {UserId}", user.Id);
-                        return StatusCode(500, "Roles are null or empty.");
+                        return StatusCode(500, new { message = "Roles are null or empty. Please, make new account."});
                     }
 
                     _logger.LogInformation("Roles assigned to user: {Roles}", string.Join(", ", roles));
