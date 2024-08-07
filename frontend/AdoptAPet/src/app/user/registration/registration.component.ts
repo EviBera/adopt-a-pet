@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IUserRegistrationCredentials } from '../../models/user.model';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'aap-register',
@@ -18,14 +19,31 @@ export class RegistrationComponent {
     secondPassword: ''
   }
   identicalPasswords: boolean = true;
-  
   registrationError: boolean = false;
+  message: string | null = null;
 
-  constructor(private router: Router){}
+  constructor(private router: Router, private userSvc: UserService){}
 
   register(form: NgForm){
     console.log("register button clicked");
     console.log(form.value);
+
+    if(this.identicalPasswords){
+      this.registrationCredentials.password = this.passwords.firstPassword;
+
+      this.registrationError = false;
+
+      this.userSvc.register(this.registrationCredentials).subscribe({
+        next: () => {
+          this.message = "Successful registration.";
+          setTimeout(() => this.router.navigate(['/login']), 2500);
+        },
+        error: err => {
+          this.message = `Registration failed: ${err}`
+          this.registrationError = true;
+        }
+      })
+    }
   }
 
   cancel(){

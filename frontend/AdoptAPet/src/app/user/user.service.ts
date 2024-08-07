@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
-import { IUser, IUserCredentials } from '../models/user.model';
+import { IUser, IUserCredentials, IUserRegistrationCredentials } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -8,17 +8,18 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UserService {
   private user: BehaviorSubject<IUser | null>;
+  private newUser: BehaviorSubject<IUser | null>;
 
-
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient) {
     this.user = new BehaviorSubject<IUser | null>(null);
+    this.newUser = new BehaviorSubject<IUser | null>(null);
   }
 
-  getUser(): Observable<IUser | null>{
+  getUser(): Observable<IUser | null> {
     return this.user;
   }
 
-  login(credentials: IUserCredentials): Observable<IUser>{
+  login(credentials: IUserCredentials): Observable<IUser> {
     return this.http
       .post<IUser>('api/auth/login', credentials)
       .pipe(map((user: IUser) => {
@@ -29,7 +30,7 @@ export class UserService {
   }
 
   logout(): Observable<any> {
-    return this.http.post("api/auth/logout", {}, {withCredentials: true})
+    return this.http.post("api/auth/logout", {}, { withCredentials: true })
       .pipe(
         map(response => {
           this.user.next(null);
@@ -39,16 +40,30 @@ export class UserService {
       );
   }
 
-  private handleError(err: any){
+  private handleError(err: any) {
     let errorMessage = '';
     if (err.error instanceof ErrorEvent) {
       //client-side or network error 
       errorMessage = `An error occured: ${err.error.message}`;
     } else {
       //backend returned unsuccessful response code
-      errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+      errorMessage = `Server returned code: ${err.status}, error message is: ${err.error.message || err.message}`;
     }
     console.error(errorMessage);
     return throwError(() => errorMessage);
   }
+
+  register(credentials: IUserRegistrationCredentials): Observable<IUser> {
+    return this.http
+      .post<IUser>('api/auth/register', credentials)
+      .pipe(
+        map((user: IUser) => {
+          this.newUser.next(user);
+          console.log(this.newUser);
+          return user;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
 }

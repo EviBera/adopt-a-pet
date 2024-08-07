@@ -1,4 +1,4 @@
-<div data-test="register-container" class="log-container">
+<div data-test="register-container" class="log-container" *ngIf="!message">
     <form data-test="register-form" #registerForm="ngForm" class="form" (ngSubmit)="register(registerForm)">
         <div data-test="info" class="input-section">
             <h2>Registration</h2>
@@ -74,4 +74,14 @@
                 [class.disabled]="registerForm.form.invalid || !identicalPasswords">Register</button>
         </div>
     </form>
+</div>
+<div data-test="messages" *ngIf="message" class="messages">
+    <div data-test="success-message" *ngIf="!registrationError" class="message">
+        <p>{{message}}</p>
+        <h2>Thank you for joining us! You can login in a second...</h2>
+    </div>
+    <div data-test="failed-registration-message" *ngIf="registrationError" class="message">
+        <h2>Something went wrong, please try to register later.</h2>
+        <p>{{message}}</p>
+    </div>
 </div>
