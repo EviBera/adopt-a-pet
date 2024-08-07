@@ -23,6 +23,9 @@ export class AppService {
   }
 
   private fetchApplications() {
+    if(this.user === null)
+      return;    
+
     if (!this.user?.id) {
       console.error('User ID is not available.');
       return;
