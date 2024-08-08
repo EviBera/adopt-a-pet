@@ -3,6 +3,7 @@ using System.Data;
 using AdoptAPet.DTOs.Advertisement;
 using AdoptAPet.Mappers;
 using AdoptAPet.Services.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdoptAPet.Controllers;
@@ -21,6 +22,7 @@ public class AdvertisementController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<List<AdvertisementDto>>> GetAllAsync()
     {
         try
@@ -66,6 +68,7 @@ public class AdvertisementController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<AdvertisementDto>> CreateAdvertisement(
         [Required, FromBody] CreateAdvertisementRequestDto requestDto)
     {
@@ -87,6 +90,7 @@ public class AdvertisementController : ControllerBase
     }
 
     [HttpDelete("{advertisementId:int}")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult> DeleteAsync([FromRoute] int advertisementId)
     {
         try
