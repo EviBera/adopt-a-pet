@@ -30,18 +30,16 @@
                 <em *ngIf="email.errors?.['required'] && email.touched">Please, enter your email.</em>
                 <em *ngIf="email.errors?.['email'] && email.touched">Valid email is required.</em>
             </div>
-            <div class="input-section">
-                <input 
-                    data-test="input-firstPassword" 
-                    name="firstPassword" 
-                    placeholder="Password" 
-                    required
-                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).*$" 
-                    minlength="8"
-                    #firstPassword="ngModel" 
-                    [(ngModel)]="passwords.firstPassword" 
-                    type="password"
-                    (ngModelChange)="checkPasswords()">
+            <div class="input-section pw">
+
+                <input data-test="input-firstPassword" name="firstPassword" placeholder="Password" required
+                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).*$" minlength="8" #firstPassword="ngModel"
+                    [(ngModel)]="passwords.firstPassword" [type]="firstPasswordFieldType" (ngModelChange)="checkPasswords()"
+                    class="password">
+                <button type="button" class="change-visibility" (click)="changeVisibility('first')">
+                    <i [ngClass]="firstPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
+
                 <em *ngIf="firstPassword.errors?.['pattern'] && firstPassword.touched">
                     Password must contain an uppercase and a lowercase letter, a digit and a symbol.
                 </em>
@@ -52,16 +50,13 @@
                     The password must be at least 8 character long.
                 </em>
             </div>
-            <div class="input-section">
-                <input 
-                    data-test="input-secondPassword" 
-                    name="secondPassword" 
-                    placeholder="Confirm password" 
-                    required
-                    #secondPassword="ngModel" 
-                    [(ngModel)]="passwords.secondPassword" 
-                    type="password"
-                    (ngModelChange)="checkPasswords()">
+            <div class="input-section pw">
+                <input data-test="input-secondPassword" name="secondPassword" placeholder="Confirm password" required
+                    #secondPassword="ngModel" [(ngModel)]="passwords.secondPassword" [type]="secondPasswordFieldType"
+                    (ngModelChange)="checkPasswords()" class="password">
+                <button type="button" class="change-visibility" (click)="changeVisibility('second')">
+                    <i [ngClass]="secondPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
                 <em *ngIf="secondPassword.errors?.['required'] && secondPassword.touched">
                     Please, confirm your password.
                 </em>

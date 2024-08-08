@@ -21,6 +21,8 @@ export class RegistrationComponent {
   identicalPasswords: boolean = true;
   registrationError: boolean = false;
   message: string | null = null;
+  firstPasswordFieldType: string = "password";
+  secondPasswordFieldType: string = "password";
 
   constructor(private router: Router, private userSvc: UserService){}
 
@@ -54,6 +56,19 @@ export class RegistrationComponent {
   checkPasswords(){
     this.identicalPasswords = this.passwords.firstPassword === this.passwords.secondPassword;
     console.log("Passwords are idetical? " + this.identicalPasswords);
+  }
+
+  changeVisibility(field: string){
+    switch(field){
+      case 'first':
+        this.firstPasswordFieldType === "password" ? this.firstPasswordFieldType = "text" : this.firstPasswordFieldType = "password";
+        break;
+      case 'second':
+        this.secondPasswordFieldType === "password" ? this.secondPasswordFieldType = "text" : this.secondPasswordFieldType = "password";
+        break;
+      default:
+        return;
+    }
   }
 }
  
