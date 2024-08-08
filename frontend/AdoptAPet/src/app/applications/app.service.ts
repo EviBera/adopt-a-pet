@@ -32,9 +32,10 @@ export class AppService {
     }
 
     const url = 'api/application/' + this.user?.id;
-    this.http.get<IApplication[]>(url)
+    this.http.get<IApplication[]>(url, {withCredentials: true})
       .subscribe({
-        next: (applications) => (this.applications.next(applications))
+        next: (applications) => (this.applications.next(applications)),
+        error: (err) => console.error("Error fetching applications: ", err)
       });
   }
 

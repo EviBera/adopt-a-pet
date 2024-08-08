@@ -2,6 +2,7 @@ using System.Data;
 using AdoptAPet.DTOs.Application;
 using AdoptAPet.Mappers;
 using AdoptAPet.Services.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdoptAPet.Controllers;
@@ -20,6 +21,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpGet("{userId}")]
+    [Authorize(Roles = "User, Rescue Team, Admin")]
     public async Task<ActionResult<List<ApplicationDto>>> GetByUserIdAsync([FromRoute]string userId)
     {
         try
