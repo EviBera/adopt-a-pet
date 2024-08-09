@@ -3,42 +3,64 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { IApplication } from '../models/application.model';
 import { HttpClient } from '@angular/common/http';
 import { IAdvertisement } from '../models/advertisement.model';
+import { IUser } from '../models/user.model';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
   private applications: BehaviorSubject<IApplication[]> = new BehaviorSubject<IApplication[]>([]);
+  private user: IUser | null = null;
 
-  constructor(private http: HttpClient) {
-    this.fetchApplications();
-   }
+  constructor(private http: HttpClient, private userSvc: UserService) {
+    this.userSvc.getUser().subscribe({
+      next: (user) => {
+        this.user = user;
+        this.fetchApplications();
+      }
+    });
+  }
 
-   private fetchApplications() {
-    this.http.get<IApplication[]>('api/application/711704b1-035f-4f76-99d9-a1dece06c153')
+  private fetchApplications() {
+    if(this.user === null)
+      return;    
+
+    if (!this.user?.id) {
+      console.error('User ID is not available.');
+      return;
+    }
+
+    const url = 'api/application/' + this.user?.id;
+    this.http.get<IApplication[]>(url, {withCredentials: true})
       .subscribe({
-        next: (applications) => (this.applications.next(applications))
+        next: (applications) => (this.applications.next(applications)),
+        error: (err) => console.error("Error fetching applications: ", err)
       });
-   }
+  }
 
-   getApplications():Observable<IApplication[]>{
+  getApplications(): Observable<IApplication[]> {
     return this.applications.asObservable();
-   }
+  }
 
-   handIn(ad: IAdvertisement) {
-
-    const appRequest = {
-      "userId" : '711704b1-035f-4f76-99d9-a1dece06c153',
-      "advertisementId" : ad.id
+  handIn(ad: IAdvertisement) {
+    if (!this.user?.id) {
+      console.error('User ID is not available.');
+      return;
     }
     
+    const appRequest = {
+      "userId": this.user?.id,
+      "advertisementId": ad.id
+    }
+
     this.http.post('/api/application', appRequest).subscribe(() => {
       console.log("new application was handed in");
       this.fetchApplications();
     });
-   }
+  }
 
-   withdraw(applicationId: number){
+  withdraw(applicationId: number) {
     const url = '/api/application/' + applicationId;
     this.http.delete(url).subscribe({
       next: data => {
@@ -48,6 +70,6 @@ export class AppService {
         console.error('Observable emitted an error: ' + err);
       }
     })
-   }
+  }
 
 }

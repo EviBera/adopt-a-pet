@@ -1,0 +1,55 @@
+p {
+    font-weight: bold;
+}
+
+.messages {
+    margin-top: 15vh;
+}
+
+.message>p {
+    text-align: center;
+    font-size: larger;
+}
+
+.password {
+    position: relative;
+    left: 29px;
+}
+
+.change-visibility {
+  background: none;
+  border: none;
+  position: relative;
+  right: 29px;
+  cursor: pointer;
+  color: #b35900;
+  box-shadow: none;
+  margin: 0;
+  height: fit-content;
+}
+
+@media (max-width: 470px){
+    .password {
+        left: 0;
+    }
+    .change-visibility {
+        top: -53px;
+        left: 120px;
+    }
+    .pw {
+        height: 46px;
+    }
+}
+
+@media (max-width: 375px){
+    
+    .change-visibility {
+        left: 100px;
+    }
+}
+
+@media (max-width: 320px){
+    .change-visibility {
+        left: 90px;
+    }
+}

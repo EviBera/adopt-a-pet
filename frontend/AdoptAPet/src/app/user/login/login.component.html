@@ -1,0 +1,22 @@
+<div data-test="form-container" class="log-container">
+    <form data-test="login-form" #loginForm="ngForm" class="form" (ngSubmit)="login(loginForm)">
+        <div data-test="email-input-container" class="input-section">
+            <input data-test="email-input" name="email" required email #email="ngModel" [(ngModel)]="credentials.email" placeholder="Email Address"
+            type="text" />
+            <em data-test="missing-email-warning" *ngIf="email.errors?.['required'] && email.touched">Email is required</em>
+            <em data-test="invalid-email-warning" *ngIf="email.errors?.['email'] && email.touched">Must be a valid email format</em>
+        </div>
+        <div data-test="password-input-container" class="input-section">
+            <input data-test="password-input" name="password" required #password="ngModel" [(ngModel)]="credentials.password" placeholder="Password" type="password" />
+            <em data-test="missing-password-warning" *ngIf="password.invalid && password.touched">Password is required</em>
+        </div>
+        <div data-test="login-button-container" class="buttons">
+            <button data-test="login-button" type="submit" [class.disabled]="loginForm.form.invalid">
+                Login
+            </button>
+        </div>
+        <div data-test="login-error" class="login-error" *ngIf="loginError">
+            Login failed. Please, try again.
+        </div>
+    </form>
+</div>

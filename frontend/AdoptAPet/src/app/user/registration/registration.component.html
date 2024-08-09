@@ -1,0 +1,82 @@
+<div data-test="register-container" class="log-container" *ngIf="!message">
+    <form data-test="register-form" #registerForm="ngForm" class="form" (ngSubmit)="register(registerForm)">
+        <div data-test="info" class="input-section">
+            <h2>Registration</h2>
+            <p>Please, fill out the following registration form.</p>
+            <hr>
+        </div>
+        <div data-test="input-fields">
+            <div class="input-section">
+                <input data-test="input-firstname" name="firstname" required minlength="2" maxlength="50"
+                    #firstname="ngModel" [(ngModel)]="registrationCredentials.firstName" placeholder="Firstname" />
+                <em *ngIf="firstname.errors?.['required'] && firstname.touched">Please, enter your firstname.</em>
+                <em *ngIf="firstname.errors?.['minlength'] && firstname.touched">Firstname must be at least 2 character
+                    long.</em>
+                <em *ngIf="firstname.errors?.['maxlength'] && firstname.touched">Firstname must be maximum 50 character
+                    long.</em>
+            </div>
+            <div class="input-section">
+                <input data-test="input-lastname" name="lastname" required minlength="2" maxlength="50"
+                    #lastname="ngModel" [(ngModel)]="registrationCredentials.lastname" placeholder="Lastname" />
+                <em *ngIf="lastname.errors?.['required'] && lastname.touched">Please, enter your lastname.</em>
+                <em *ngIf="lastname.errors?.['minlength'] && lastname.touched">Lastname must be at least 2 character
+                    long.</em>
+                <em *ngIf="lastname.errors?.['maxlength'] && lastname.touched">Lastname must be maximum 50 character
+                    long.</em>
+            </div>
+            <div class="input-section">
+                <input data-test="input-email" name="email" required email #email="ngModel"
+                    [(ngModel)]="registrationCredentials.email" placeholder="Email" />
+                <em *ngIf="email.errors?.['required'] && email.touched">Please, enter your email.</em>
+                <em *ngIf="email.errors?.['email'] && email.touched">Valid email is required.</em>
+            </div>
+            <div class="input-section pw">
+
+                <input data-test="input-firstPassword" name="firstPassword" placeholder="Password" required
+                    pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).*$" minlength="8" #firstPassword="ngModel"
+                    [(ngModel)]="passwords.firstPassword" [type]="firstPasswordFieldType" (ngModelChange)="checkPasswords()"
+                    class="password">
+                <button type="button" class="change-visibility" (click)="changeVisibility('first')">
+                    <i [ngClass]="firstPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
+
+                <em *ngIf="firstPassword.errors?.['pattern'] && firstPassword.touched">
+                    Password must contain an uppercase and a lowercase letter, a digit and a symbol.
+                </em>
+                <em *ngIf="firstPassword.errors?.['required'] && firstPassword.touched">
+                    Please, enter a password.
+                </em>
+                <em *ngIf="firstPassword.errors?.['minlength'] && firstPassword.touched">
+                    The password must be at least 8 character long.
+                </em>
+            </div>
+            <div class="input-section pw">
+                <input data-test="input-secondPassword" name="secondPassword" placeholder="Confirm password" required
+                    #secondPassword="ngModel" [(ngModel)]="passwords.secondPassword" [type]="secondPasswordFieldType"
+                    (ngModelChange)="checkPasswords()" class="password">
+                <button type="button" class="change-visibility" (click)="changeVisibility('second')">
+                    <i [ngClass]="secondPasswordFieldType === 'password' ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+                </button>
+                <em *ngIf="secondPassword.errors?.['required'] && secondPassword.touched">
+                    Please, confirm your password.
+                </em>
+                <em *ngIf="!identicalPasswords && secondPassword.dirty">The second password differs.</em>
+            </div>
+        </div>
+        <div data-test="buttons">
+            <button data-test="cancel-button" type="button" (click)="cancel()">Cancel</button>
+            <button data-test="register-button" type="submit"
+                [class.disabled]="registerForm.form.invalid || !identicalPasswords">Register</button>
+        </div>
+    </form>
+</div>
+<div data-test="messages" *ngIf="message" class="messages">
+    <div data-test="success-message" *ngIf="!registrationError" class="message">
+        <p>{{message}}</p>
+        <h2>Thank you for joining us! You can login in a second...</h2>
+    </div>
+    <div data-test="failed-registration-message" *ngIf="registrationError" class="message">
+        <h2>Something went wrong, please try to register later.</h2>
+        <p>{{message}}</p>
+    </div>
+</div>

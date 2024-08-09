@@ -13,7 +13,7 @@ public class Pet
     public bool IsNeutered { get; set; }
     [MaxLength(500)] public string Description { get; set; } = String.Empty;
     public User? Owner { get; set; }
-    [MaxLength(200)]
+    [MaxLength(2000)]
     public string PictureLink { get; set; } = String.Empty;
 
     public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();

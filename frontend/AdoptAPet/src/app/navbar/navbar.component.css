@@ -1,6 +1,7 @@
 .container {
     margin: 30px auto;
     display: flex;
+    justify-content: space-between;
 }
 
 a {
@@ -10,4 +11,32 @@ a {
     color: black;
     border: solid black 1px;
     padding: 5px;
+}
+
+.right {
+    display: flex;
+}
+
+p {
+    margin: 0;
+    font-size: large;
+    font-weight: bold;
+    padding-top: 10px;
+}
+
+@media (max-width: 425px) {
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    a {
+        margin: 5px;
+    }
 }

@@ -2,6 +2,7 @@ using System.Data;
 using AdoptAPet.DTOs.Application;
 using AdoptAPet.Mappers;
 using AdoptAPet.Services.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdoptAPet.Controllers;
@@ -20,6 +21,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpGet("{userId}")]
+    [Authorize(Roles = "User, Rescue Team, Admin")]
     public async Task<ActionResult<List<ApplicationDto>>> GetByUserIdAsync([FromRoute]string userId)
     {
         try
@@ -35,6 +37,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpGet("app/{applicationId:int}")]
+    [Authorize(Roles = "User, Rescue Team, Admin")]
     public async Task<ActionResult<ApplicationDto>> GetByIdAsync([FromRoute]int applicationId)
     {
         try
@@ -50,6 +53,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpGet("ad/{advertisementId:int}")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<List<ApplicationDto>>> GetByAdvertisementId([FromRoute] int advertisementId)
     {
         try
@@ -65,6 +69,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "User, Rescue Team, Admin")]
     public async Task<ActionResult<ApplicationDto>> CreateAsync([FromBody] CreateApplicationRequestDto requestDto)
     {
         try
@@ -80,6 +85,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpPatch("{applicationId:int}")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<ApplicationDto>> UpdateAsync([FromRoute] int applicationId,
         [FromBody] UpdateApplicationRequestDto requestDto)
     {
@@ -96,6 +102,7 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpDelete("{applicationId:int}")]
+    [Authorize(Roles = "User, Rescue Team, Admin")]
     public async Task<ActionResult> DeleteAsync([FromRoute] int applicationId)
     {
         try

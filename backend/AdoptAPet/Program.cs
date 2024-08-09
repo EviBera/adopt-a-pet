@@ -31,7 +31,16 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
         options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultUI();
+    .AddDefaultTokenProviders();
+   // .AddDefaultUI();
+
+   builder.Services.ConfigureApplicationCookie(options =>
+   {
+       options.Cookie.HttpOnly = true;
+       options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+       options.LoginPath = "/api/auth/login";
+       options.SlidingExpiration = true;
+   });
 
 var app = builder.Build();
 
@@ -44,6 +53,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

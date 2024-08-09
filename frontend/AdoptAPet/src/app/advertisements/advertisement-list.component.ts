@@ -8,6 +8,8 @@ import { AdvertisementService } from './advertisement.service';
 import { AppService } from '../applications/app.service';
 import { IAdvertisement } from '../models/advertisement.model';
 import { speciesValues } from '../models/pet.model';
+import { UserService } from '../user/user.service';
+import { IUser } from '../models/user.model';
 
 @Component({
   selector: 'aap-advertisement-list',
@@ -20,24 +22,35 @@ export class AdvertisementListComponent {
   private advertisements: IAdvertisement[] = [];
   speciesValues = speciesValues;
   filter: string = '';
+  private user: IUser | null = null;
 
   constructor(
     private adSvc: AdvertisementService,
     private appSvc: AppService,
-    private router: Router
+    private router: Router,
+    private userSvc: UserService
   ){}
 
   ngOnInit(){
     this.adSvc.getAdvertisementsOfAdoptablePets().subscribe((ads) => {
       this.advertisements = ads;
-    })
+    });
+    this.userSvc.getUser().subscribe({
+      next: (user) => { this.user = user}
+    });
   }
 
   handInApplication(ad: IAdvertisement){
     console.log("I'd like to adopt button is clicked, ad: " + ad.id)
-    this.appSvc.handIn(ad);
-    alert("Your wish for adoption has been registered.");
-    this.router.navigate(['/applications']);
+    if(this.user){
+      this.appSvc.handIn(ad);
+          alert("Your wish for adoption has been registered.");
+          this.router.navigate(['/applications']);
+    } 
+    else {
+      alert("You have to login if you wish to apply for a pet.")
+    }
+    
   }
 
   get advertisementList(){

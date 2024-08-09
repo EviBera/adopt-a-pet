@@ -9,5 +9,5 @@ public class UpdatePetRequestDto
     public string? Name { get; set; }
     public bool? IsNeutered { get; set; }
     [MaxLength(500)] public string? Description { get; set; }
-    [MaxLength(200)] public string? PictureLink { get; set; }
+    [MaxLength(2000)] public string? PictureLink { get; set; }
 }

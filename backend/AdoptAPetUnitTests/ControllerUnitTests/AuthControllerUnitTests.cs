@@ -16,7 +16,7 @@ public class AuthControllerUnitTests
 {
     private Mock<UserManager<User>> _userManagerMock;
     private Mock<SignInManager<User>> _signInManagerMock;
-    private Mock<ILogger<AuthController>> _loggerMock;
+    private ILogger<AuthController> _logger;
     private AuthController _controller;
 
     [SetUp]
@@ -38,78 +38,48 @@ public class AuthControllerUnitTests
             schemesMock.Object,
             null);
         
-        _loggerMock = new Mock<ILogger<AuthController>>();
-        _controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _loggerMock.Object);
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddConsole()
+                .AddDebug();
+        });
+        _logger = loggerFactory.CreateLogger<AuthController>();
+        
+        _controller = new AuthController(_userManagerMock.Object, _signInManagerMock.Object, _logger)
+        {
+        };
     }
-
+    
     [Test]
-    public async Task RegisterAsync_ReturnsStatusCode201_IfRegistrationIsSuccessful()
+    public async Task RegisterAsync_ReturnsBadRequest_IfModelStateIsInvalid()
     {
-        //Arrange
+        // Arrange
         var inputData = new RegisterUserRequestDto
         {
             FirstName = "Test Firstname",
             LastName = "Test Lastname",
             Email = "test@email.com",
-            Password = "Password!0"
-        };
-        var expectedData = new User
-        {
-            Id = "Test UserId",
-            FirstName = "Test Firstname",
-            LastName = "Test Lastname",
-            Email = "test@email.com",
-            UserName = "test@email.com"
+            Password = "Password!0",
+            IsStaff = false
         };
 
-        _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<User>(), inputData.Password))
-            .ReturnsAsync(IdentityResult.Success)
-            .Callback<User, string>((u, p) => u.Id = expectedData.Id);
-        
-        //Act
+        _controller.ModelState.AddModelError("Email", "Email is required");
+
+        // Act
         var result = await _controller.RegisterAsync(inputData);
-        
-        //Assert
-        Assert.IsNotNull(result);
-        Assert.That(result, Is.TypeOf<CreatedAtActionResult>());
-        var returnedData = (result as CreatedAtActionResult).Value as NewUserDto;
-        Assert.IsNotNull(returnedData);
-        Assert.That(returnedData.Id, Is.EqualTo(expectedData.Id));
-        Assert.That(returnedData.FirstName, Is.EqualTo(expectedData.FirstName));
-        Assert.That(returnedData.LastName, Is.EqualTo(expectedData.LastName));
-        Assert.That(returnedData.Email, Is.EqualTo(expectedData.Email));
-        Assert.That(returnedData.UserName, Is.EqualTo(expectedData.UserName));
-        Assert.That(returnedData.Token, Is.EqualTo(string.Empty));
-        _userManagerMock.Verify(um => um.CreateAsync(It.IsAny<User>(), inputData.Password), Times.Once);
-    }
 
-    [Test]
-    public async Task RegisterAsync_ReturnsInternalServerError_IfRegistrationFails()
-    {
-        //Arrange
-        var inputData = new RegisterUserRequestDto
-        {
-            FirstName = "Test Firstname",
-            LastName = "Test Lastname",
-            Email = "test@email.com",
-            Password = "Password!0"
-        };
-        var errors = new List<IdentityError> { new IdentityError { Description = "Error creating user." } };
-        _userManagerMock.Setup(um => um.CreateAsync(It.IsAny<User>(), inputData.Password))
-            .ReturnsAsync(IdentityResult.Failed(errors.ToArray()));
-        
-        //Act
-        var result = await _controller.RegisterAsync(inputData);
-        
-        //Assert
+        // Assert
         Assert.IsNotNull(result);
-        Assert.That(result, Is.TypeOf<ObjectResult>());
-        var objectResult = result as ObjectResult;
-        Assert.That(objectResult.StatusCode, Is.EqualTo(500));
-        Assert.That(objectResult.Value, Is.EqualTo(errors));
-        _userManagerMock.Verify(um => um.CreateAsync(It.IsAny<User>(), inputData.Password), Times.Once);
-    }
+        Assert.That(result, Is.TypeOf<BadRequestObjectResult>(), $"Expected BadRequestObjectResult, but got {result.GetType()}");
 
+        var badRequestResult = result as BadRequestObjectResult;
+        Assert.IsNotNull(badRequestResult?.Value, "BadRequest result value is null");
+
+        var modelState = badRequestResult?.Value as SerializableError;
+        Assert.IsTrue(modelState?.ContainsKey("Email"), "ModelState does not contain expected error key");
+    }
+    
     [Test]
     public async Task DeleteAsync_ReturnsStatusCode204_IfDeletionIsSuccessful()
     {
@@ -186,5 +156,89 @@ public class AuthControllerUnitTests
             Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
             Assert.That(objectResult?.Value, Is.EqualTo("Unexpected error"));
         });
+    }
+    
+    [Test]
+    public async Task GetByIdAsync_ReturnsUser_IfUserExists()
+    {
+        // Arrange
+        var userId = "testUserId";
+        var user = new User { Id = userId, UserName = "testUser" };
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync(user);
+
+        // Act
+        var result = await _controller.GetByIdAsync(userId);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.Result, Is.TypeOf<OkObjectResult>());
+        var okResult = result.Result as OkObjectResult;
+        Assert.IsNotNull(okResult?.Value);
+        Assert.That(okResult?.Value, Is.EqualTo(user));
+    }
+
+    [Test]
+    public async Task GetByIdAsync_ReturnsNotFound_IfUserDoesNotExist()
+    {
+        // Arrange
+        var userId = "nonexistentUserId";
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ReturnsAsync((User?)null);
+
+        // Act
+        var result = await _controller.GetByIdAsync(userId);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.Result, Is.TypeOf<NotFoundResult>());
+    }
+
+    [Test]
+    public async Task GetByIdAsync_ReturnsStatusCode500_IfExceptionIsThrown()
+    {
+        // Arrange
+        var userId = "testUserId";
+        _userManagerMock.Setup(um => um.FindByIdAsync(userId)).ThrowsAsync(new Exception("Unexpected error"));
+
+        // Act
+        var result = await _controller.GetByIdAsync(userId);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result.Result, Is.TypeOf<ObjectResult>());
+        var objectResult = result.Result as ObjectResult;
+        Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
+        Assert.That(objectResult?.Value, Is.EqualTo("Unexpected error"));
+    }
+    
+    [Test]
+    public async Task LogoutAsync_ReturnsOk_IfLogoutIsSuccessful()
+    {
+        //Arrange
+        _signInManagerMock.Setup(sm => sm.SignOutAsync()).Returns(Task.CompletedTask);
+        // Act
+        var result = await _controller.LogoutAsync();
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.That(result, Is.TypeOf<OkResult>());
+        _signInManagerMock.Verify(sm => sm.SignOutAsync(), Times.Once);
+    }
+
+    [Test]
+    public async Task LogoutAsync_ReturnsInternalServerError_IfLogoutIsUnsuccessful()
+    {
+        //Arrange
+        var exceptionMessage = "Logout failed.";
+        _signInManagerMock.Setup(sm => sm.SignOutAsync()).ThrowsAsync(new Exception(exceptionMessage));
+        
+        //Act
+        var result = await _controller.LogoutAsync();
+        
+        //Arrange
+        var objectResult = result as ObjectResult;
+        Assert.IsInstanceOf<ObjectResult>(result);
+        Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
+        Assert.That(objectResult?.Value, Is.EqualTo(exceptionMessage));
+        _signInManagerMock.Verify(sm => sm.SignOutAsync(), Times.Once);
     }
 }

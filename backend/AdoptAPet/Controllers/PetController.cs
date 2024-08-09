@@ -4,6 +4,7 @@ using AdoptAPet.DTOs.Pet;
 using AdoptAPet.Mappers;
 using AdoptAPet.Models;
 using AdoptAPet.Services.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdoptAPet.Controllers;
@@ -22,6 +23,7 @@ public class PetController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<List<PetDto>>> GetAllAsync()
     {
         try
@@ -37,6 +39,7 @@ public class PetController : ControllerBase
     }
 
     [HttpGet("{petId:int}")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<PetDto>> GetByIdAsync([Required, FromRoute]int petId)
     {
         try
@@ -56,6 +59,7 @@ public class PetController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Rescue Team")]
     public async Task<ActionResult<PetDto>> RegisterPetAsync([FromBody] CreatePetRequestDto petDto)
     {
         try
@@ -71,6 +75,7 @@ public class PetController : ControllerBase
     }
 
     [HttpPatch("{petId:int}")]
+    [Authorize(Roles = "Rescue Team")]
     public async Task<ActionResult<PetDto>> UpdatePetAsync([Required, FromRoute] int petId,
         [FromBody] UpdatePetRequestDto petDto)
     {
@@ -92,6 +97,7 @@ public class PetController : ControllerBase
     }
 
     [HttpDelete("{petId:int}")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult> DeleteAsync([Required, FromRoute]int petId)
     {
         try

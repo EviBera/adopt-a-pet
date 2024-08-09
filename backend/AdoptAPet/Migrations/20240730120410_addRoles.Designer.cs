@@ -3,6 +3,7 @@ using System;
 using AdoptAPet.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AdoptAPet.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240730120410_addRoles")]
+    partial class addRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,8 +65,7 @@ namespace AdoptAPet.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -106,8 +108,8 @@ namespace AdoptAPet.Migrations
 
                     b.Property<string>("PictureLink")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("Species")
                         .HasColumnType("integer");
@@ -221,19 +223,19 @@ namespace AdoptAPet.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "356b2695-4c30-4d2e-b147-123e88d8a872",
+                            Id = "4553e464-f69e-45df-86b9-d6583eebcc9d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "5078686b-a154-4bb1-b4cf-3577900c1e52",
+                            Id = "e7f7d65d-bc88-41fd-9000-1563cfea1e93",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "291d8bfe-1e9d-430f-8998-49bdd695d160",
+                            Id = "ab19b7fe-b11b-4225-90da-834a89a8081e",
                             Name = "Rescue Team",
                             NormalizedName = "RESCUE TEAM"
                         });
