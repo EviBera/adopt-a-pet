@@ -54,7 +54,7 @@ export class AppService {
       "advertisementId": ad.id
     }
 
-    this.http.post('/api/application', appRequest).subscribe(() => {
+    this.http.post('/api/application', appRequest, {withCredentials: true}).subscribe(() => {
       console.log("new application was handed in");
       this.fetchApplications();
     });
@@ -62,7 +62,7 @@ export class AppService {
 
   withdraw(applicationId: number) {
     const url = '/api/application/' + applicationId;
-    this.http.delete(url).subscribe({
+    this.http.delete(url, {withCredentials: true}).subscribe({
       next: data => {
         this.fetchApplications();
       },
