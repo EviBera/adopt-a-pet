@@ -4,9 +4,21 @@ select {
     font-family: inherit;
     padding: 2px 5px;
     cursor: pointer;
+    position: absolute;
+    z-index: 1;
 }
 
 option:hover {
     background-color: #b35900;
     color: white;
 }
+
+hr {
+    margin-top: 20px;
+}
+
+strong {
+    position: relative;
+    top: 6px;
+}
+
