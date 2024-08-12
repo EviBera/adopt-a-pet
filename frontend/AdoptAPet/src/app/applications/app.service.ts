@@ -26,12 +26,7 @@ export class AppService {
     if(this.user === null)
       return;    
 
-    if (!this.user?.id) {
-      console.error('User ID is not available.');
-      return;
-    }
-
-    const url = 'api/application/' + this.user?.id;
+    const url = 'api/application/mine';
     this.http.get<IApplication[]>(url, {withCredentials: true})
       .subscribe({
         next: (applications) => (this.applications.next(applications)),
@@ -44,17 +39,8 @@ export class AppService {
   }
 
   handIn(ad: IAdvertisement) {
-    if (!this.user?.id) {
-      console.error('User ID is not available.');
-      return;
-    }
-    
-    const appRequest = {
-      "userId": this.user?.id,
-      "advertisementId": ad.id
-    }
-
-    this.http.post('/api/application', appRequest, {withCredentials: true}).subscribe(() => {
+ 
+    this.http.post('/api/application/mine', ad.id, {withCredentials: true}).subscribe(() => {
       console.log("new application was handed in");
       this.fetchApplications();
     });

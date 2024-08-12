@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AdoptAPet.DTOs.User;
 using AdoptAPet.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -201,11 +202,41 @@ public class AuthController : ControllerBase
     }
 
     [HttpDelete("{userId}")]
-    [Authorize(Roles = "User, Rescue Team, Admin")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult> DeleteAsync([FromRoute] string userId)
     {
         try
         {
+            User? user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("The user does not exist");
+            }
+            
+            var result = await _userManager.DeleteAsync(user);
+
+            return result.Succeeded ? NoContent() : StatusCode(500, "Something went wrong, please try again later.");
+            
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error deleting user.");
+            return StatusCode(500, e.Message);
+        }
+    }
+    
+    [HttpDelete("myself")]
+    [Authorize(Roles = "User")]
+    public async Task<ActionResult> DeleteAsync()
+    {
+        try
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return BadRequest(new {message = "Logged-in user is missing."});
+            }
+            
             User? user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {

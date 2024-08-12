@@ -1,4 +1,5 @@
 using System.Data;
+using System.Security.Claims;
 using AdoptAPet.DTOs.Application;
 using AdoptAPet.Mappers;
 using AdoptAPet.Services.Repositories;
@@ -21,11 +22,32 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpGet("{userId}")]
-    [Authorize(Roles = "User, Rescue Team, Admin")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<List<ApplicationDto>>> GetByUserIdAsync([FromRoute]string userId)
     {
         try
         {
+            var apps = await _repository.GetByUserAsync(userId);
+            return Ok(apps);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error getting applications of user.");
+            return e is RowNotInTableException ? BadRequest("Invalid user id.") : StatusCode(500, e.Message);
+        }
+    }
+    [HttpGet("mine")]
+    [Authorize(Roles = "User")]
+    public async Task<ActionResult<List<ApplicationDto>>> GetByUserIdAsync()
+    {
+        try
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return BadRequest(new { message = "Logged-in user is missing." });
+            }
+            
             var apps = await _repository.GetByUserAsync(userId);
             return Ok(apps);
         }
@@ -69,11 +91,38 @@ public class ApplicationController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "User, Rescue Team, Admin")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<ApplicationDto>> CreateAsync([FromBody] CreateApplicationRequestDto requestDto)
     {
         try
         {
+            var newApplication = await _repository.CreateAsync(requestDto);
+            return CreatedAtAction("GetById", new { applicationId = newApplication.Id}, newApplication.ToApplicationDto());
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to register the application.");
+            return e is RowNotInTableException ? BadRequest("Invalid parameters.") : StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpPost("mine")]
+    [Authorize(Roles = "User")]
+    public async Task<ActionResult<ApplicationDto>> CreateAsync([FromBody] int advertisementId)
+    {
+        try
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return BadRequest(new { message = "Logged-in user is missing." });
+            }
+
+            CreateApplicationRequestDto requestDto = new CreateApplicationRequestDto
+            {
+                AdvertisementId = advertisementId,
+                UserId = userId
+            };
             var newApplication = await _repository.CreateAsync(requestDto);
             return CreatedAtAction("GetById", new { applicationId = newApplication.Id}, newApplication.ToApplicationDto());
         }
