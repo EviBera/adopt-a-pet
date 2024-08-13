@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+
+import { UserService } from './user/user.service';
 import { HomeComponent } from './home/home.component';
 import { AdvertisementListComponent } from './advertisements/advertisement-list.component';
 import { ApplicationsComponent } from './applications/applications.component';
@@ -6,8 +9,7 @@ import { LoginComponent } from './user/login/login.component';
 import { RegistrationComponent } from './user/registration/registration.component';
 import { LogoutComponent } from './user/logout/logout.component';
 import { AdvertisementHandlerComponent } from './advertisement-handler/advertisement-handler.component';
-import { UserService } from './user/user.service';
-import { inject } from '@angular/core';
+import { ApplicationHandlerComponent } from './application-handler/application-handler.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +27,12 @@ export const routes: Routes = [
         path: 'adopt',
         component: AdvertisementListComponent,
         title: 'Adoptable pets'
+    },
+    {
+        path: 'applications',
+        component: ApplicationHandlerComponent,
+        title: 'Applications',
+        canMatch: [() => inject(UserService).canAdvertise()]
     },
     {
         path: 'applications',
