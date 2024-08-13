@@ -66,4 +66,16 @@ export class UserService {
       );
   }
 
+  canAdopt(): boolean {
+    return this.user.value?.role === "User";
+  }
+
+  canAdvertise(): boolean {
+    return this.user.value?.role === "Rescue Team";
+  }
+
+  canSupervise(): boolean {
+    return this.user.value?.role === "Admin";
+  }
+
 }

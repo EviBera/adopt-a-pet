@@ -24,7 +24,11 @@ export class AppService {
 
   private fetchApplications() {
     if(this.user === null)
-      return;    
+      return;
+
+    if(this.user.role !== 'User'){
+      return;
+    }
 
     const url = 'api/application/mine';
     this.http.get<IApplication[]>(url, {withCredentials: true})

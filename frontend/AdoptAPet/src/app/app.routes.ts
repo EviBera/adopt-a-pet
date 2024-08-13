@@ -5,12 +5,21 @@ import { ApplicationsComponent } from './applications/applications.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegistrationComponent } from './user/registration/registration.component';
 import { LogoutComponent } from './user/logout/logout.component';
+import { AdvertisementHandlerComponent } from './advertisement-handler/advertisement-handler.component';
+import { UserService } from './user/user.service';
+import { inject } from '@angular/core';
 
 export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
         title: 'Home'
+    },
+    {
+        path: 'adopt',
+        component: AdvertisementHandlerComponent,
+        title: 'Advertisements',
+        canMatch: [() => inject(UserService).canAdvertise()]
     },
     {
         path: 'adopt',
