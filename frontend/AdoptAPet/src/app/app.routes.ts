@@ -8,8 +8,8 @@ import { ApplicationsComponent } from './applications/applications.component';
 import { LoginComponent } from './user/login/login.component';
 import { RegistrationComponent } from './user/registration/registration.component';
 import { LogoutComponent } from './user/logout/logout.component';
-import { AdvertisementHandlerComponent } from './advertisement-handler/advertisement-handler.component';
-import { ApplicationHandlerComponent } from './application-handler/application-handler.component';
+import { AdvertisementHandlerComponent } from './management/advertisement-handler/advertisement-handler.component';
+import { ApplicationHandlerComponent } from './management/application-handler/application-handler.component';
 
 export const routes: Routes = [
     {

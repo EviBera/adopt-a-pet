@@ -1,0 +1,24 @@
+.large-button-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 50px;
+}
+
+.small-button-container {
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+}
+
+strong {
+    align-items: center;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .large-button-container{
+        flex-direction: column;
+        align-items: center;
+    }
+}
