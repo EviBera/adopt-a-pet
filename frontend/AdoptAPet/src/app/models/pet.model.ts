@@ -10,6 +10,14 @@ export interface IPet {
     pictureLink: string
 }
 
+export interface IUpdatePet {
+    id: number,
+    name: string,
+    isNeutered: boolean,
+    description: string,
+    pictureLink: string
+}
+
 export const speciesValues = [
     {title: 'All', value: 'all'},
     {title: 'Dogs', value: 'dogs'},
