@@ -1,0 +1,33 @@
+img {
+    max-width: 100px;
+}
+
+.pet-data {
+    width: 50%;
+}
+
+.pet-list {
+    padding-left: 15px;
+}
+
+h3 {
+    padding-left: 15px;
+}
+
+label {
+    padding: 10px;
+}
+
+.update-form {
+    font-family: inherit;
+}
+
+.radio-btns {
+    width: 100px;
+}
+
+@media (max-width: 768px) {
+    .pet-data {
+        width: 90%;
+    }
+}

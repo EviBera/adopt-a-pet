@@ -1,3 +1,47 @@
 <div>
-    <p>Pets in the database:</p>
+    <h3>Pets in the database:</h3>
+    <div data-test="list-of-pets" *ngFor="let pet of petList" class="pet-list">
+        <div data-test="pet-container" class="flex-container">
+            <div data-test="pet-data" class="pet-data">
+                <p data-test="identifier">Id: {{pet.id}}, name: {{pet.name}}</p>
+                <p data-test="gender">{{pet.isNeutered ? "neutered" : "not neutered"}} {{pet.gender | lowercase}} {{pet.species |
+                    lowercase}}</p>
+                <p data-test="description">{{pet.description}}</p>
+                <p data-test="has-owner" *ngIf="pet.ownerId">adopted by: {{pet.ownerId}}</p>
+                <p data-test="without-owner" *ngIf="!pet.ownerId">waits for adoption</p>
+            </div>
+            <div data-test="pet-picture">
+                <img data-test="link" [src]="pet.pictureLink" [alt]="pet.name" />
+            </div>
+            <div data-test="handler-buttons">
+                <button type="button" (click)="updatePet(pet.id)">Update</button>
+                <button type="button" (click)="deletePet(pet.id)">Delete</button>
+            </div>
+        </div>
+        <div>
+            <form *ngIf="showUpdateForm && idToUpdate === pet.id" class="update-form">
+                <div>
+                    <label>Name</label>
+                    <input placeholder="pet.name">
+                </div>
+                <div>
+                    <label>Neutered?</label>
+                    <br>
+                    <div class="radio-btns">
+                        <input type="radio" name="neutered">Yes
+                        <input type="radio" name="neutered">No
+                    </div>
+                </div>
+                <div>
+                    <label>Description</label>
+                    <textarea placeholder="Description"></textarea>
+                </div>
+                <div>
+                    <label>Picture link</label>
+                    <textarea placeholder="Picture link"></textarea>
+                </div>
+            </form>
+        </div>
+        <hr>
+    </div>
 </div>
