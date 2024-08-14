@@ -16,6 +16,14 @@ strong {
     margin-bottom: 20px;
 }
 
+p {
+    margin: 20px auto 0;
+}
+
+button {
+    height: fit-content;
+}
+
 @media (max-width: 600px) {
     .large-button-container{
         flex-direction: column;
