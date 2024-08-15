@@ -15,7 +15,9 @@ export class PetListComponent {
   pets: IPet[] = [];
   showUpdateForm: boolean = false;
   idToUpdate: number | null = null;
+  idToDelete: number | null = null;
   updateError: boolean = false;
+  deleteError: boolean = false;
   message: string = '';
   updatePetModel: IUpdatePet = {
     id: 0,
@@ -57,12 +59,10 @@ export class PetListComponent {
   }
   
   updatePet(form: NgForm){
-    console.log(form.value);
     this.managementSvc.updatePet(this.updatePetModel).subscribe({
       next: () => {
         alert("Pet has been updated successfully.");
         this.clearFields();
-        this.showUpdateForm = false;
         this.fetchPets();
       },
       error: (err) => {
@@ -71,18 +71,37 @@ export class PetListComponent {
       }
     });
   }
+
+  showConfirm(petId: number){
+    this.idToDelete = petId;
+  }
   
-  deletePet(pet: IPet){
-    console.log("Delete: " + pet.id);
-    this.managementSvc.deletePet(pet.id);
+  deletePet(){
+    console.log("Delete: " + this.idToDelete);
+    if(this.idToDelete == null)
+      return;
+
+    this.managementSvc.deletePet(this.idToDelete).subscribe({
+      next: () => {
+        alert("Pet has been deleted successfully.");
+        this.clearFields();
+        this.fetchPets();
+      },
+      error: (err) => {
+        this.deleteError = true;
+        this.message = err;
+      }
+    })
   }
   
   cancel(){
-    this.showUpdateForm = false;
     this.clearFields();
   }
-
+  
   clearFields(){
+    this.showUpdateForm = false;
+    this.idToDelete = null;
+    this.idToUpdate = null;
     this.updatePetModel = {
       id: 0,
       name: '',

@@ -15,7 +15,6 @@ export class ManagementService {
   }
 
   updatePet(petModel: IUpdatePet){
-    console.log("UPDATE");
     let url = 'api/pet/' + petModel.id;
     let body = {
       "name": petModel.name,
@@ -28,6 +27,8 @@ export class ManagementService {
   }
 
   deletePet(petId: number){
-    console.log("DELETE");
+    let url = 'api/pet/' + petId;
+    
+    return this.http.delete(url, {withCredentials: true});
   }
 }

@@ -4,7 +4,8 @@
         <div data-test="pet-container" class="flex-container">
             <div data-test="pet-data" class="pet-data">
                 <p data-test="identifier">Id: {{pet.id}}, name: {{pet.name}}</p>
-                <p data-test="gender">{{pet.isNeutered ? "neutered" : "not neutered"}} {{pet.gender | lowercase}} {{pet.species |
+                <p data-test="gender">{{pet.isNeutered ? "neutered" : "not neutered"}} {{pet.gender | lowercase}}
+                    {{pet.species |
                     lowercase}}</p>
                 <p data-test="description">{{pet.description}}</p>
                 <p data-test="has-owner" *ngIf="pet.ownerId">adopted by: {{pet.ownerId}}</p>
@@ -15,41 +16,51 @@
             </div>
             <div data-test="handler-buttons">
                 <button type="button" (click)="showForm(pet)">Update</button>
-                <button type="button" (click)="deletePet(pet)">Delete</button>
+                <button type="button" (click)="showConfirm(pet.id)">Delete</button>
             </div>
         </div>
-            <form *ngIf="showUpdateForm && idToUpdate === pet.id" class="update-form" (ngSubmit)="updatePet(updateForm)" #updateForm="ngForm">
-                <section>
-                    <label>Name</label>
-                    <input placeholder="pet.name" [(ngModel)]="updatePetModel.name" name="petName"/>
-                    <input type="hidden" [(ngModel)]="updatePetModel.id" name="id" />
-                </section>
-                <section class="radio-btns">
-                    <label>Neutered?</label>
-                    <br>
-                        <div class="radio"> 
-                            <label>Yes</label>
-                            <input type="radio" [(ngModel)]="updatePetModel.isNeutered" [value]="true" name="neutered"/>
-                        </div>
-                        <div class="radio">
-                            <label>No</label>
-                            <input type="radio" [(ngModel)]="updatePetModel.isNeutered" [value]="false" name="neutered"/>
-                        </div>
-                </section>
-                <section>
-                    <label>Description</label>
-                    <textarea placeholder="Description" rows="2" [(ngModel)]="updatePetModel.description" name="description"></textarea>
-                </section>
-                <section>
-                    <label>Picture link</label>
-                    <textarea placeholder="Picture link" rows="5" [(ngModel)]="updatePetModel.pictureLink" name="pictureLink"></textarea>
-                </section>
-                <button type="button" (click)="cancel()">Cancel</button>
-                <button type="submit">Update</button>
-            </form>
-            <div *ngIf="updateError">
-                <strong>Something went wrong: {{message}}</strong>
-            </div>
+        <form *ngIf="showUpdateForm && idToUpdate === pet.id" class="update-form" (ngSubmit)="updatePet(updateForm)"
+            #updateForm="ngForm">
+            <section>
+                <label>Name</label>
+                <input placeholder="pet.name" [(ngModel)]="updatePetModel.name" name="petName" />
+                <input type="hidden" [(ngModel)]="updatePetModel.id" name="id" />
+            </section>
+            <section class="radio-btns">
+                <label>Neutered?</label>
+                <br>
+                <div class="radio">
+                    <label>Yes</label>
+                    <input type="radio" [(ngModel)]="updatePetModel.isNeutered" [value]="true" name="neutered" />
+                </div>
+                <div class="radio">
+                    <label>No</label>
+                    <input type="radio" [(ngModel)]="updatePetModel.isNeutered" [value]="false" name="neutered" />
+                </div>
+            </section>
+            <section>
+                <label>Description</label>
+                <textarea placeholder="Description" rows="2" [(ngModel)]="updatePetModel.description"
+                    name="description"></textarea>
+            </section>
+            <section>
+                <label>Picture link</label>
+                <textarea placeholder="Picture link" rows="5" [(ngModel)]="updatePetModel.pictureLink"
+                    name="pictureLink"></textarea>
+            </section>
+            <button type="button" (click)="cancel()">Cancel</button>
+            <button type="submit">Update</button>
+        </form>
+        <div *ngIf="updateError">
+            <strong>Something went wrong: {{message}}</strong>
+        </div>
+        <div *ngIf="idToDelete === pet.id">
+            <button type="button" (click)="cancel()">Cancel</button>
+            <button type="button" (click)="deletePet()">Do it!</button>
+        </div>
+        <div *ngIf="deleteError">
+            <strong>Something went wrong: {{message}}</strong>
+        </div>
         <hr>
     </div>
 </div>
