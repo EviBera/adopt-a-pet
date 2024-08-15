@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IPet } from '../models/pet.model';
+import { IPet, IUpdatePet } from '../models/pet.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -14,8 +14,17 @@ export class ManagementService {
     return this.http.get<IPet[]>('api/pet', {withCredentials: true});
   }
 
-  updatePet(petId: number){
+  updatePet(petModel: IUpdatePet){
     console.log("UPDATE");
+    let url = 'api/pet/' + petModel.id;
+    let body = {
+      "name": petModel.name,
+      "isNeutered": petModel.isNeutered,
+      "description": petModel.description,
+      "pictureLink": petModel.pictureLink
+    }
+
+    return this.http.patch<IPet>(url, body, {withCredentials: true});
   }
 
   deletePet(petId: number){
