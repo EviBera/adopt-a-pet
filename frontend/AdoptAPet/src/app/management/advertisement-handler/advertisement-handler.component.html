@@ -18,5 +18,5 @@
 <hr>
 <aap-pet-list data-test="pet-list" *ngIf="showPets"></aap-pet-list>
 <aap-ad-list data-test="ad-list" *ngIf="showAds"></aap-ad-list>
-<aap-create-pet data-test="pet-generator" *ngIf="showPetGenerator"></aap-create-pet>
+<aap-create-pet data-test="pet-generator" *ngIf="showPetGenerator" (cancel)="setPetGeneratorVisibility()"></aap-create-pet>
 

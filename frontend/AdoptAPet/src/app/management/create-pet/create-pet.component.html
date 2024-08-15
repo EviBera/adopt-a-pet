@@ -1,1 +1,56 @@
-<p>create-pet works!</p>
+<div>
+    <form (ngSubmit)="savePet(createForm)" #createForm="ngForm">
+            <section>
+                <label class="bold">Name</label>
+                <input placeholder="Name" [(ngModel)]="createPetModel.name" name="petName" />
+            </section>
+            <section class="radio-btns">
+                <label class="bold gap">Species</label>
+                <span *ngFor="let ps of petSpecies" class="radio">
+                    <input type="radio" [(ngModel)]="createPetModel.species" name="species" [value]="ps.value">{{ps.title}}
+                </span>
+                <label class="bold gap">Neutered?</label>
+                <br>
+                <span class="radio">
+                    <div class="radio">
+                        <label>Yes</label>
+                        <input type="radio" [(ngModel)]="createPetModel.isNeutered" [value]="true" name="neutered" />
+                    </div>
+                    <div class="radio right">
+                        <label>No</label>
+                        <input type="radio" [(ngModel)]="createPetModel.isNeutered" [value]="false" name="neutered" />
+                    </div>
+                </span>
+                <label class="bold gap">Gender</label>
+                <span class="radio">
+                    <div class="radio">
+                        <label>Male</label>
+                        <input type="radio" [(ngModel)]="createPetModel.gender" value="Male" name="gender">
+                    </div>
+                    <div class="radio right">
+                        <label>Female</label>
+                        <input type="radio" [(ngModel)]="createPetModel.gender" value="Female" name="gender">
+                    </div>
+                </span>
+            </section>
+            <section>
+                <label class="bold">Estimated birth</label>
+                <input type="date" [(ngModel)]="createPetModel.birth" name="birth">
+            </section>
+            <section>
+                <label class="bold">Description</label>
+                <textarea placeholder="Description" rows="2" [(ngModel)]="createPetModel.description"
+                    name="description"></textarea>
+            </section>
+            <section>
+                <label class="bold">Picture link</label>
+                <textarea placeholder="Picture link" rows="5" [(ngModel)]="createPetModel.pictureLink"
+                    name="pictureLink"></textarea>
+            </section>
+            <button type="button" (click)="cancelButtonClicked()">Cancel</button>
+            <button type="submit">Save</button>
+        </form>
+</div>
+<div *ngIf="hasError">
+    <strong>An error occured during saving the pet: {{message}}</strong>
+</div>

@@ -1,0 +1,69 @@
+label {
+    padding: 10px;
+}
+
+form {
+    font-family: inherit;
+    font-size: large;
+}
+
+section {
+    margin-top: 20px;
+}
+
+section > label {
+    width: 100px;
+    display: inline-block;
+}
+
+section > input {
+    padding: 0;
+    font-family: inherit;
+    font-size: medium;
+}
+
+textarea {
+    vertical-align: middle;
+    width: 80%;
+    font-family: inherit;
+    font-size: medium;
+}
+
+.radio {
+    display: flex;
+}
+
+.radio > label {
+    width: 50px;
+}
+
+.radio > input {
+    width: auto;
+}
+
+
+.radio-btns{
+    width: 100px;
+}
+
+::placeholder {
+    font-family: inherit;
+    font-size: medium;
+}
+
+span {
+    display: inline-block;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.gap {
+    padding-top: 20px;
+    padding-bottom: 0;
+}
+
+.right {
+    padding-left: 80px;
+}
