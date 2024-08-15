@@ -77,10 +77,10 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
-        var returnedData = actionResult.Value as List<PetDto>;
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(200));
+        var returnedData = actionResult?.Value as List<PetDto>;
         Assert.IsNotNull(returnedData);
-        Assert.That(returnedData.Count, Is.EqualTo(mockData.Count));
+        Assert.That(returnedData?.Count, Is.EqualTo(mockData.Count));
         _repositoryMock.Verify(repo => repo.GetAllAsync(), Times.Once);
     }
 
@@ -98,7 +98,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(500));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(500));
         _repositoryMock.Verify(repo => repo.GetAllAsync(), Times.Once);
     }
 
@@ -128,12 +128,12 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
-        var returnedData = actionResult.Value as PetDto;
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(200));
+        var returnedData = actionResult?.Value as PetDto;
         Assert.IsNotNull(returnedData);
-        Assert.That(returnedData.Id, Is.EqualTo(mockData.Id));
-        Assert.That(returnedData.Name, Is.EqualTo(mockData.Name));
-        Assert.That(returnedData.Birth, Is.EqualTo(mockData.Birth));
+        Assert.That(returnedData?.Id, Is.EqualTo(mockData.Id));
+        Assert.That(returnedData?.Name, Is.EqualTo(mockData.Name));
+        Assert.That(returnedData?.Birth, Is.EqualTo(mockData.Birth));
         _repositoryMock.Verify(repo => repo.GetByIdAsync(petId), Times.Once);
     }
 
@@ -151,7 +151,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(404));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(404));
         Assert.That(actionResult.Value.ToString().Contains("The searched pet does not exist."));
         _repositoryMock.Verify(repo => repo.GetByIdAsync(nonExistentPetId), Times.Once);
     }
@@ -171,7 +171,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var objectResult = result.Result as ObjectResult;
         Assert.IsNotNull(objectResult);
-        Assert.That(objectResult.StatusCode, Is.EqualTo(500));
+        Assert.That(objectResult?.StatusCode, Is.EqualTo(500));
         Assert.That(objectResult.Value.ToString().Contains(exceptionMessage));
         _repositoryMock.Verify(repo => repo.GetByIdAsync(petId), Times.Once);
     }
@@ -182,13 +182,13 @@ public class PetControllerUnitTests
         //Arrange
         var inputData = new CreatePetRequestDto
         {
-            Birth = new DateTime(2024, 01, 01),
+            Birth = "2024-01-01",
             Description = "New test pet",
-            Gender = Gender.Male,
+            Gender = "Male",
             IsNeutered = false,
             Name = "Test Pet 22",
             PictureLink = "Test Link",
-            Species = Species.Hamster
+            Species = "Hamster"
         };
         var expectedData = new PetDto()
         {
@@ -224,18 +224,18 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(201));
-        var returnedData = actionResult.Value as PetDto;
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(201));
+        var returnedData = actionResult?.Value as PetDto;
         Assert.IsNotNull(returnedData);
-        Assert.That(returnedData.Id, Is.EqualTo(expectedData.Id));
-        Assert.That(returnedData.Description, Is.EqualTo(expectedData.Description));
-        Assert.That(returnedData.Species, Is.EqualTo(expectedData.Species));
-        Assert.That(returnedData.IsNeutered, Is.EqualTo(expectedData.IsNeutered));
-        Assert.That(returnedData.Birth, Is.EqualTo(expectedData.Birth));
-        Assert.That(returnedData.Gender, Is.EqualTo(expectedData.Gender));
-        Assert.That(returnedData.Name, Is.EqualTo(expectedData.Name));
-        Assert.That(returnedData.OwnerId, Is.EqualTo(expectedData.OwnerId));
-        Assert.That(returnedData.PictureLink, Is.EqualTo(expectedData.PictureLink));
+        Assert.That(returnedData?.Id, Is.EqualTo(expectedData.Id));
+        Assert.That(returnedData?.Description, Is.EqualTo(expectedData.Description));
+        Assert.That(returnedData?.Species, Is.EqualTo(expectedData.Species));
+        Assert.That(returnedData?.IsNeutered, Is.EqualTo(expectedData.IsNeutered));
+        Assert.That(returnedData?.Birth, Is.EqualTo(expectedData.Birth));
+        Assert.That(returnedData?.Gender, Is.EqualTo(expectedData.Gender));
+        Assert.That(returnedData?.Name, Is.EqualTo(expectedData.Name));
+        Assert.That(returnedData?.OwnerId, Is.EqualTo(expectedData.OwnerId));
+        Assert.That(returnedData?.PictureLink, Is.EqualTo(expectedData.PictureLink));
         _repositoryMock.Verify(repo => repo.CreateAsync(inputData), Times.Once);
     }
 
@@ -246,12 +246,12 @@ public class PetControllerUnitTests
         var invalidInput = new CreatePetRequestDto
         {
             Name = "Tooooooooooooooooooo Long Name For Testing Purposes",
-            Birth = new DateTime(2024, 6, 28),
+            Birth = "2024-6-28",
             Description = "Test description",
-            Gender = Gender.Female,
+            Gender = "Female",
             IsNeutered = true,
             PictureLink = "Test link",
-            Species = Species.Dog
+            Species = "Dog"
         };
         var exceptionMessage = "The field Name must be a string or array type with a maximum length of '30'.";
         _repositoryMock.Setup(repo => repo.CreateAsync(invalidInput)).ThrowsAsync(new Exception(exceptionMessage));
@@ -263,7 +263,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(400));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(400));
         Assert.That(actionResult.Value.ToString().Contains("Error registering the pet, The field Name must be a string or array type with a maximum length of '30'."));
         _repositoryMock.Verify(repo => repo.CreateAsync(invalidInput), Times.Once);
     }
@@ -275,12 +275,12 @@ public class PetControllerUnitTests
         var inputData = new CreatePetRequestDto
         {
             Name = "Test pet",
-            Birth = new DateTime(2024, 6, 28),
+            Birth = "2024-6-28",
             Description = "Test description",
-            Gender = Gender.Female,
+            Gender = "Female",
             IsNeutered = false,
             PictureLink = "Test link",
-            Species = Species.Hamster
+            Species = "Hamster"
         };
         _repositoryMock.Setup(repo => repo.CreateAsync(inputData)).ThrowsAsync(new Exception());
         
@@ -291,7 +291,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(400));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(400));
         Assert.That(actionResult.Value.ToString().Contains("Error registering the pet"));
         _repositoryMock.Verify(repo => repo.CreateAsync(inputData), Times.Once);
     }
@@ -330,18 +330,18 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(200));
-        var returnedData = actionResult.Value as PetDto;
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(200));
+        var returnedData = actionResult?.Value as PetDto;
         Assert.IsNotNull(returnedData);
-        Assert.That(returnedData.Id, Is.EqualTo(updatedPet.Id));
-        Assert.That(returnedData.Name, Is.EqualTo(updatedPet.Name));
-        Assert.That(returnedData.Description, Is.EqualTo(updatedPet.Description));
-        Assert.That(returnedData.IsNeutered, Is.EqualTo(updatedPet.IsNeutered));
-        Assert.That(returnedData.Birth, Is.EqualTo(updatedPet.Birth));
-        Assert.That(returnedData.PictureLink, Is.EqualTo(updatedPet.PictureLink));
-        Assert.That(returnedData.Gender, Is.EqualTo(Enum.GetName(typeof(Gender), updatedPet.Gender)));
-        Assert.That(returnedData.Species, Is.EqualTo(Enum.GetName(typeof(Species), updatedPet.Species)));
-        Assert.That(returnedData.OwnerId, Is.EqualTo(""));
+        Assert.That(returnedData?.Id, Is.EqualTo(updatedPet.Id));
+        Assert.That(returnedData?.Name, Is.EqualTo(updatedPet.Name));
+        Assert.That(returnedData?.Description, Is.EqualTo(updatedPet.Description));
+        Assert.That(returnedData?.IsNeutered, Is.EqualTo(updatedPet.IsNeutered));
+        Assert.That(returnedData?.Birth, Is.EqualTo(updatedPet.Birth));
+        Assert.That(returnedData?.PictureLink, Is.EqualTo(updatedPet.PictureLink));
+        Assert.That(returnedData?.Gender, Is.EqualTo(Enum.GetName(typeof(Gender), updatedPet.Gender)));
+        Assert.That(returnedData?.Species, Is.EqualTo(Enum.GetName(typeof(Species), updatedPet.Species)));
+        Assert.That(returnedData?.OwnerId, Is.EqualTo(""));
         _repositoryMock.Verify(repo => repo.UpdateAsync(petId, inputData), Times.Once);
     }
 
@@ -367,7 +367,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(400));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(400));
         _repositoryMock.Verify(repo => repo.UpdateAsync(nonExistentPetId, inputData), Times.Once);
     }
 
@@ -393,7 +393,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result.Result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(500));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(500));
         Assert.That(actionResult.Value.ToString().Contains("Something went wrong"));
         _repositoryMock.Verify(repo => repo.UpdateAsync(petId, inputData), Times.Once);
     }
@@ -412,7 +412,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var noContentResult = result as NoContentResult;
         Assert.IsNotNull(noContentResult);
-        Assert.That(noContentResult.StatusCode, Is.EqualTo(204));
+        Assert.That(noContentResult?.StatusCode, Is.EqualTo(204));
         _repositoryMock.Verify(repo => repo.DeleteAsync(petId), Times.Once);
     }
 
@@ -430,7 +430,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(400));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(400));
         Assert.That(actionResult.Value.ToString().Contains("Pet does not exist."));
         _repositoryMock.Verify(repo => repo.DeleteAsync(nonExistentPetId), Times.Once);
     }
@@ -449,7 +449,7 @@ public class PetControllerUnitTests
         Assert.IsNotNull(result);
         var actionResult = result as ObjectResult;
         Assert.IsNotNull(actionResult);
-        Assert.That(actionResult.StatusCode, Is.EqualTo(500));
+        Assert.That(actionResult?.StatusCode, Is.EqualTo(500));
         Assert.That(actionResult.Value.ToString().Contains("Something went wrong."));
         _repositoryMock.Verify(repo => repo.DeleteAsync(petId), Times.Once);
     }

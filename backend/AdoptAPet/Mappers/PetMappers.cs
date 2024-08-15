@@ -21,16 +21,16 @@ public static class PetMappers
         };
     }
 
-    public static Pet? ToPetFromCreatePetRequestDto(this CreatePetRequestDto petDto)
+    public static Pet ToPetFromCreatePetRequestDto(this CreatePetRequestDto petDto)
     {
-        if (Enum.IsDefined(typeof(Species), petDto.Species) && Enum.IsDefined(typeof(Gender), petDto.Gender))
+        if (Enum.IsDefined(typeof(Species), (Species) Enum.Parse(typeof(Species), petDto.Species)) && Enum.IsDefined(typeof(Gender), (Gender) Enum.Parse(typeof(Gender), petDto.Gender)))
         {
             return new Pet
                     {
                         Name = petDto.Name,
-                        Species = petDto.Species,
-                        Birth = petDto.Birth,
-                        Gender = petDto.Gender,
+                        Species = (Species) Enum.Parse(typeof(Species), petDto.Species),
+                        Birth = DateTimeOffset.Parse(petDto.Birth).UtcDateTime,
+                        Gender = (Gender) Enum.Parse(typeof(Gender), petDto.Gender),
                         IsNeutered = petDto.IsNeutered,
                         Description = petDto.Description,
                         Owner = null,
