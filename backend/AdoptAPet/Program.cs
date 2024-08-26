@@ -56,5 +56,88 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+AddBasicActors();
+
 app.Run();
+
+void AddBasicActors()
+{
+    var tAdmin = CreateAdminIfNotExists();
+    tAdmin.Wait();
+
+    var tRescueTeamMember = CreateRescueTeamMemberIfNotExists();
+    tRescueTeamMember.Wait();
+
+    var tRegularUser = CreateRegularUserIfNotExists();
+    tRegularUser.Wait();
+}
+
+async Task CreateAdminIfNotExists()
+{
+    using var scope = app.Services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var adminInDb = await userManager.FindByEmailAsync("admin@adoptapet.com");
+    if (adminInDb == null)
+    {
+        var admin = new User
+        {
+            FirstName = "Administrator",
+            LastName = "of the Application",
+            Email = "admin@adoptapet.com",
+            UserName = "admin@adoptapet.com"
+        };
+        var adminCreated = await userManager.CreateAsync(admin, "String!0");
+
+        if (adminCreated.Succeeded)
+        {
+            await userManager.AddToRoleAsync(admin, "Admin");
+        }
+    }
+}
+
+async Task CreateRescueTeamMemberIfNotExists()
+{
+    using var scope = app.Services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var rescueTeamMemberInDb = await userManager.FindByEmailAsync("staff@adoptapet.com");
+    if (rescueTeamMemberInDb == null)
+    {
+        var rescueTeamMember = new User
+        {
+            FirstName = "Francis",
+            LastName = "of Assisi",
+            Email = "staff@adoptapet.com",
+            UserName = "staff@adoptapet.com"
+        };
+        var rescueTeamMemberCreated = await userManager.CreateAsync(rescueTeamMember, "String!1");
+
+        if (rescueTeamMemberCreated.Succeeded)
+        {
+            await userManager.AddToRoleAsync(rescueTeamMember, "Rescue Team");
+        }
+    }
+}
+
+async Task CreateRegularUserIfNotExists()
+{
+    using var scope = app.Services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var regularUserInDb = await userManager.FindByEmailAsync("tom.taylor@email.com");
+    if (regularUserInDb == null)
+    {
+        var regularUser = new User
+        {
+            FirstName = "Tom",
+            LastName = "Taylor",
+            Email = "tom.taylor@email.com",
+            UserName = "tom.taylor@email.com"
+        };
+        var regularUserCreated = await userManager.CreateAsync(regularUser, "String!2");
+
+        if (regularUserCreated.Succeeded)
+        {
+            await userManager.AddToRoleAsync(regularUser, "User");
+        }
+    }
+}
 
