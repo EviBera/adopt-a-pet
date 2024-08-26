@@ -10,6 +10,7 @@ import { RegistrationComponent } from './user/registration/registration.componen
 import { LogoutComponent } from './user/logout/logout.component';
 import { AdvertisementHandlerComponent } from './management/advertisement-handler/advertisement-handler.component';
 import { ApplicationHandlerComponent } from './management/application-handler/application-handler.component';
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +26,12 @@ export const routes: Routes = [
     },
     {
         path: 'adopt',
+        component: AdminPanelComponent,
+        title: 'Advertisements',
+        canMatch: [() => inject(UserService).canSupervise()]
+    },
+    {
+        path: 'adopt',
         component: AdvertisementListComponent,
         title: 'Adoptable pets'
     },
@@ -33,6 +40,12 @@ export const routes: Routes = [
         component: ApplicationHandlerComponent,
         title: 'Applications',
         canMatch: [() => inject(UserService).canAdvertise()]
+    },
+    {
+        path: 'applications',
+        component: AdminPanelComponent,
+        title: 'Applications',
+        canMatch: [() => inject(UserService).canSupervise()]
     },
     {
         path: 'applications',
