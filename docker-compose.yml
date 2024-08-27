@@ -13,12 +13,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - adoptapetnet
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: ./backend
     environment:
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
+      DB_HOST: db
+      DB_PORT: 5432
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
@@ -28,6 +33,7 @@ services:
       - db
     networks:
       - adoptapetnet
+    entrypoint: ["/app/wait-for-it.sh", "db:5432", "--", "dotnet", "AdoptAPet.dll"]
 
   frontend:
     build:
