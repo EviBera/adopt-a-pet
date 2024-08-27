@@ -35,3 +35,10 @@ I used the official Docker instance.
 ![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white) 18
 
 
+
+
+#### Container
+
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
+I used a [bash script](https://github.com/vishnubob/wait-for-it) for launching the backend in the container at the right time. [Giles Hall](https://github.com/vishnubob), many thanks for it!
