@@ -23,11 +23,9 @@ jobs:
                      retries=10
                      while [ $retries -gt 0 ]; do
                      if curl -s http://localhost:4200 > /dev/null; then
-                     echo "Frontend is ready!"
                      break
                      else
-                     echo "Waiting for frontend..."
-                     sleep 10
+                     sleep 15
                      retries=$((retries - 1))
                      fi
                      done
