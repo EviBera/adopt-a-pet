@@ -12,18 +12,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        repository: FoldiKrizsanIldiko/adoptAPet
-        token: ${{secrets.FKI_ADOPTAPET}}
-        ref: fki-Frontend-tests
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-    - name: Run tests CI tests
-      run: |
-        cd FontendTests/adoptAPetFrontend
-        mvn test -Dcucumber.filter.tags="@testCI"
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        
+      - name: Build the project
+        run: docker-compose up -d
+        
+      - name: Wait for build
+        run: |
+                     retries=10
+                     while [ $retries -gt 0 ]; do
+                     if curl -s http://localhost:4200 > /dev/null; then
+                     echo "Frontend is ready!"
+                     break
+                     else
+                     echo "Waiting for frontend..."
+                     sleep 10
+                     retries=$((retries - 1))
+                     fi
+                     done
+          
+      - name: Checkout the test repository
+        uses: actions/checkout@v4
+        with:
+          repository: FoldiKrizsanIldiko/adoptAPet
+          token: ${{secrets.FKI_ADOPTAPET}}
+          ref: fki-Frontend-tests
+          
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+          
+      - name: Run tests CI tests
+        run: |
+          cd FontendTests/adoptAPetFrontend
+          mvn test -Dcucumber.filter.tags="@workflow"
+          
+      - name: Tear down services
+        run: docker-compose down
