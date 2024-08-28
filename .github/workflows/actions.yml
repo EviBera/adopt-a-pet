@@ -12,6 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+          
       - name: Checkout the repository
         uses: actions/checkout@v4
         with:
@@ -30,8 +38,17 @@ jobs:
 
       - name: Wait for build
         run: |
+         retries=10
+                     while [ $retries -gt 0 ]; do
+                     if curl -s http://localhost:4200 > /dev/null; then
+                     break
+                     else
+                     sleep 10
+                     retries=$((retries - 1))
+                     fi
+                     done
           docker compose logs 
-          curl -v http://localhost:4200 || echo "Failed to access frontend"
+          curl -v http://localhost:4200
 
       - name: Checkout the test repository
         uses: actions/checkout@v4
@@ -39,13 +56,6 @@ jobs:
           repository: FoldiKrizsanIldiko/adoptAPet
           token: ${{secrets.FKI_ADOPTAPET}}
           ref: fki-Frontend-tests
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
 
       - name: Run tests CI tests
         run: |
