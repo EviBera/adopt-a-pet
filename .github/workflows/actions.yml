@@ -18,7 +18,7 @@ jobs:
           ref: rescue-team-features
         
       - name: Build the project
-        run: docker-compose up -d
+        run: docker compose up -d
         
       - name: Wait for build
         run: |
