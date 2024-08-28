@@ -3,8 +3,8 @@ name: Frontend test
 on:
   push:
     branches: [ "fki-pipeline-setup" ]
-    paths:
-      - '!backend/**'
+    paths-ignore:
+      - 'backend/**'
 
 jobs:
   build:
