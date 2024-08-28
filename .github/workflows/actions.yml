@@ -62,6 +62,3 @@ jobs:
           cd FontendTests/adoptAPetFrontend
           mvn test -Dcucumber.filter.tags="@workflow"
 
-      - name: Tear down services
-        run: docker compose down
-   
