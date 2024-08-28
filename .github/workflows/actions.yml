@@ -42,8 +42,6 @@ jobs:
                      retries=$((retries - 1))
                      fi
                      done
-          docker compose logs 
-          curl -v http://localhost:4200
 
       - name: Checkout the test repository
         uses: actions/checkout@v4
@@ -65,5 +63,5 @@ jobs:
           mvn test -Dcucumber.filter.tags="@workflow"
 
       - name: Tear down services
-        run: docker-compose down
+        run: docker compose down
    
