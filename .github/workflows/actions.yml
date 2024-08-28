@@ -22,8 +22,8 @@ jobs:
         
       - name: Wait for build
         run: |
-              docker compose logs frontend
-              curl -v http://frontend:80 || echo "Failed to access frontend"
+              docker compose logs 
+              curl -v http://localhost:4200 || echo "Failed to access frontend"
             
       #   run: |
       #                retries=10
