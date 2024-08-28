@@ -22,8 +22,11 @@ jobs:
            POSTGRES_USER: ${{secrets.POSTGRES_USER}}
            POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
            POSTGRES_DB: ${{secrets.POSTGRES_DB}}
-        run:
-          docker compose up -d
+        run: |
+          echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+          echo $POSTGRES_USER
+          echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+          #docker compose up -d
 
 
       - name: Wait for build
