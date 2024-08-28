@@ -18,33 +18,23 @@ jobs:
           ref: rescue-team-features
 
       - name: Build the project
-        env:
-           POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-           POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
-           POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+        # env:
+        #    POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+        #    POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+        #    POSTGRES_DB: ${{secrets.POSTGRES_DB}}
         run: |
+          export POSTGRES_USER=${{secrets.POSTGRES_USER}}
+          export POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}
+          export POSTGRES_DB=${{secrets.POSTGRES_DB}}
           echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
           echo $POSTGRES_USER
           echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
           docker compose up -d
 
-
       - name: Wait for build
         run: |
           docker compose logs 
           curl -v http://localhost:4200 || echo "Failed to access frontend"
-          
-          #   run: |
-          #                retries=10
-          #                while [ $retries -gt 0 ]; do
-          #                if curl -s http://localhost:4200 > /dev/null; then
-          #                break
-          #                else
-          #                sleep 15
-          #                retries=$((retries - 1))
-          #                fi
-          #                done
-
 
       - name: Checkout the test repository
         uses: actions/checkout@v4
