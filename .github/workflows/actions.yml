@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+        with: 
+          ref: rescue-team-features
         
       - name: Build the project
         run: docker-compose up -d
