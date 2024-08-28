@@ -22,15 +22,29 @@ jobs:
         
       - name: Wait for build
         run: |
-                     retries=10
-                     while [ $retries -gt 0 ]; do
-                     if curl -s http://localhost:4200 > /dev/null; then
-                     break
-                     else
-                     sleep 15
-                     retries=$((retries - 1))
-                     fi
-                     done
+            retries=10
+            while [ $retries -gt 0 ]; do
+              response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4200)
+              if [ "$response" -eq 200 ]; then
+                echo "Frontend is ready!"
+                break
+              else
+                echo "Waiting for frontend... Response code: $response"
+                sleep 10
+                retries=$((retries - 1))
+              fi
+            done
+      #   run: |
+      #                retries=10
+      #                while [ $retries -gt 0 ]; do
+      #                if curl -s http://localhost:4200 > /dev/null; then
+      #                break
+      #                else
+      #                sleep 15
+      #                retries=$((retries - 1))
+      #                fi
+      #                done
+         
           
       - name: Checkout the test repository
         uses: actions/checkout@v4
