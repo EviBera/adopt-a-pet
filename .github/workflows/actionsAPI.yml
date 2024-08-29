@@ -57,7 +57,5 @@ jobs:
       # Run collection
       - name: Run collection
         run: |
-          newman --version
-          cat Adopt_A_Pet_CI.postman_collection.json
-          newman run "Adopt_A_Pet_CI.postman_collection.json"
+          newman run "New Collection.postman_collection.json"
 
