@@ -50,11 +50,6 @@ jobs:
       - name: Install newman with reporter
         run: |
           npm install -g newman
-          npm install -g newman-reporter-htmlextra
-
-      #Create folder to export results
-      - name: Create folder
-        run: mkdir Testresults
 
       - name: List files in the directory
         run: ls -R 
@@ -62,11 +57,5 @@ jobs:
       # Run collection
       - name: Run collection
         run: |
-          newman run "Adopt_A_Pet_CI.postman_collection.json" -r htmlextra --reporter-htmlextra-export Testresults/result.html
-      # Publish the report
+          newman run "Adopt_A_Pet_CI.postman_collection.json" -r
 
-      - name: Publish report
-        uses: actions/upload-artifact@v4
-        with:
-          name: Reports
-          path: Testresults
