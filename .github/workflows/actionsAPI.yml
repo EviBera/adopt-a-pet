@@ -55,6 +55,12 @@ jobs:
       #Create folder to export results
       - name: Create folder
         run: mkdir Testresults
+        
+      - name: Confirm branch
+        run: git branch
+
+      - name: List files in the directory
+        run: ls -R adoptAPet/
 
       # Run collection
       - name: Run collection
