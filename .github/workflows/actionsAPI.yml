@@ -57,5 +57,5 @@ jobs:
       # Run collection
       - name: Run collection
         run: |
-          newman run "New Collection.postman_collection.json"
+          newman run "SimpleLogin.postman_collection.json"
 
