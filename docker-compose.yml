@@ -28,7 +28,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgresPW0
     ports:
-      - "5000:80"
+      - "5000:8080"
     depends_on:
       - db
     networks:
