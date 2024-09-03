@@ -7,7 +7,10 @@
     </select>
 </div>
 <hr>
-<h2 *ngIf="advertisementList.length === 0">
+<h2 *ngIf="advertisementList.length === 0 && filter === '' ">
+    Sorry, we do not have adoptable pets.
+</h2>
+<h2 *ngIf="advertisementList.length === 0 && filter !== '' ">
     Sorry, we do not have adoptable {{filter}}.
 </h2>
 <ul data-test="adoptable-pets-list">
