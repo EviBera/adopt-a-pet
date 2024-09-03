@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ICreatePet, IPet, IUpdatePet } from '../models/pet.model';
 import { HttpClient } from '@angular/common/http';
+import { IAdvertisement } from '../models/advertisement.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,9 @@ export class ManagementService {
   createPet(petModel: ICreatePet): Observable<IPet>{
     
     return this.http.post<IPet>('api/pet', petModel, {withCredentials: true});
+  }
+
+  getAds(): Observable<IAdvertisement[]> {
+    return this.http.get<IAdvertisement[]>('api/advertisement', {withCredentials: true});
   }
 }

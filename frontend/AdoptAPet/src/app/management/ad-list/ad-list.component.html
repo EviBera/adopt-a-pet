@@ -1,3 +1,31 @@
-<div >
-    <p>Advertisements in the database:</p>
+<div>
+    <h3>Advertisements in the database:</h3>
+    <table data-test="table-of-ads">
+        <thead>
+            <tr>
+                <th>Ad id</th>
+                <th>Exp.</th>
+                <th> </th>
+                <th>Pet name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let ad of adList">
+
+                <td>{{ad.id}}</td>
+                <td class="tooltip">
+                    <span *ngIf="hasExpired(ad)">Expired</span>
+                    <span *ngIf="!hasExpired(ad)">In progress</span>
+                    <span class="tooltiptext">{{ad.expiresAt | date:'medium' }}</span>
+                </td>
+                <td>   </td>
+                <td class="tooltip">{{ad.petDto.name}}
+                    <span class="tooltiptext" *ngIf="ad.petDto.isNeutered">Neutered {{ad.petDto.gender | lowercase}}
+                        {{ad.petDto.species | lowercase}}</span>
+                    <span class="tooltiptext" *ngIf="!ad.petDto.isNeutered">{{ad.petDto.gender}} {{ad.petDto.species |
+                        lowercase}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
