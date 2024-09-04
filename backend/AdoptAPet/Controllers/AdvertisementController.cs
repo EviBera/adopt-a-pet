@@ -38,6 +38,7 @@ public class AdvertisementController : ControllerBase
     }
 
     [HttpGet("{advertisementId:int}")]
+    [Authorize(Roles = "Rescue Team, Admin")]
     public async Task<ActionResult<AdvertisementDto>> GetByIdAsync([Required, FromRoute]int advertisementId)
     {
         try
