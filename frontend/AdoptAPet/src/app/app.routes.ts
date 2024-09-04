@@ -36,13 +36,19 @@ export const routes: Routes = [
         title: 'Adoptable pets'
     },
     {
-        path: 'applications',
+        path: 'applications/:advertisementId',
         component: ApplicationHandlerComponent,
         title: 'Applications',
         canMatch: [() => inject(UserService).canAdvertise()]
     },
     {
         path: 'applications',
+        component: ApplicationHandlerComponent,
+        title: 'Applications',
+        canMatch: [() => inject(UserService).canAdvertise()]
+    },
+    {
+        path: ' ',
         component: AdminPanelComponent,
         title: 'Applications',
         canMatch: [() => inject(UserService).canSupervise()]
