@@ -41,4 +41,9 @@ export class ManagementService {
   getAds(): Observable<IAdvertisement[]> {
     return this.http.get<IAdvertisement[]>('api/advertisement', {withCredentials: true});
   }
+
+  getAdById(advertisementId: string): Observable<IAdvertisement> {
+    let url = 'api/advertisement/' + advertisementId;
+    return this.http.get<IAdvertisement>(url, {withCredentials: true});
+  }
 }

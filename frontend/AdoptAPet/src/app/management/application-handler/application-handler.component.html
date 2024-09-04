@@ -1,4 +1,18 @@
 <h2>Let's make someone happy today!</h2>
-<div>
-    <p>These are the expired and unhandled advertisements:</p>
+<div *ngIf="advertisementId">
+    <div>
+        <p>Handle applications with advertisement id: {{advertisementId}}</p>
+    </div>
+    <div>
+        Created at: {{advertisement?.createdAt}}
+    </div>
+    <div>
+        Pet: {{advertisement?.petDto?.name}}
+    </div>
+    <div *ngFor="let application of advertisement?.applications">
+        {{application.userId}}
+    </div>
+</div>
+<div *ngIf="!advertisementId">
+    You haven't choose an ad yet.
 </div>

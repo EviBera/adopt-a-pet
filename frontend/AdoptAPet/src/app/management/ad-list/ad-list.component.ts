@@ -38,7 +38,7 @@ constructor(private managementSvc: ManagementService, private router: Router){}
 
   handleApplications(advertisement: IAdvertisement){
     console.log("Handle application of ad " + advertisement.id);
-    this.router.navigate(['/applications']);
+    this.router.navigate(['/applications', advertisement.id]);
   }
 
   createApplications(advertisement: IAdvertisement){
