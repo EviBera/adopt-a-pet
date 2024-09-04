@@ -7,8 +7,11 @@ tbody {
     width: 100%;
 }
 
+tr {
+    width: 100%;
+}
+
 td, th {
-    border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
 }
@@ -19,7 +22,6 @@ tr:nth-child(even) {
 
 .tooltip {
     position: relative;
-    display: inline-block;
 }
   
 .tooltip .tooltiptext {
@@ -49,4 +51,9 @@ tr:nth-child(even) {
     border-width: 5px;
     border-style: solid;
     border-color: transparent black transparent transparent;
+}
+
+button {
+    margin: 0;
+    padding: 10px;
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { IAdvertisement } from '../../models/advertisement.model';
 import { ManagementService } from '../management.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'aap-ad-list',
@@ -13,7 +14,7 @@ import { ManagementService } from '../management.service';
 export class AdListComponent {
 advetisements: IAdvertisement[] = [];
 
-constructor(private managementSvc: ManagementService){}
+constructor(private managementSvc: ManagementService, private router: Router){}
 
   ngOnInit(){
     this.fetchAds();
@@ -33,6 +34,15 @@ constructor(private managementSvc: ManagementService){}
     const currentDate = new Date();
     const adExpiration = new Date(advertisement.expiresAt);
     return adExpiration < currentDate;
+  }
+
+  handleApplications(advertisement: IAdvertisement){
+    console.log("Handle application of ad " + advertisement.id);
+    this.router.navigate(['/applications']);
+  }
+
+  createApplications(advertisement: IAdvertisement){
+    console.log("Create new ad " + advertisement.id);
   }
   
 }

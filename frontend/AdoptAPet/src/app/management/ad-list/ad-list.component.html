@@ -4,27 +4,46 @@
         <thead>
             <tr>
                 <th>Ad id</th>
-                <th>Exp.</th>
-                <th> </th>
+                <th>Expired?</th>
+                <th>Has applications?</th>
                 <th>Pet name</th>
+                <th>Has owner?</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let ad of adList">
 
-                <td>{{ad.id}}</td>
+                <td class="tooltip">
+                    <span>{{ad.id}}</span>
+                </td>
                 <td class="tooltip">
                     <span *ngIf="hasExpired(ad)">Expired</span>
                     <span *ngIf="!hasExpired(ad)">In progress</span>
                     <span class="tooltiptext">{{ad.expiresAt | date:'medium' }}</span>
                 </td>
-                <td>   </td>
+                <td class="tooltip">
+                    <span *ngIf="ad.applications.length > 0">Yes</span>
+                    <span *ngIf="ad.applications.length === 0">No</span>
+                </td>
                 <td class="tooltip">{{ad.petDto.name}}
                     <span class="tooltiptext" *ngIf="ad.petDto.isNeutered">Neutered {{ad.petDto.gender | lowercase}}
                         {{ad.petDto.species | lowercase}}</span>
                     <span class="tooltiptext" *ngIf="!ad.petDto.isNeutered">{{ad.petDto.gender}} {{ad.petDto.species |
                         lowercase}}</span>
                 </td>
+                <td class="tooltip">
+                    <span *ngIf="ad.petDto.ownerId">Yes</span>
+                    <span *ngIf="!ad.petDto.ownerId">No</span>
+                </td>
+                <th class="tooltip">
+                    <button type="button" 
+                        *ngIf="hasExpired(ad) && ad.applications.length > 0 && !ad.petDto.ownerId" 
+                        (click)="handleApplications(ad)">Handle applications</button>
+                    <button type="button" 
+                        *ngIf="hasExpired(ad) && ad.applications.length === 0 && !ad.petDto.ownerId" 
+                        (click)="createApplications(ad)">Create new ad</button>
+                </th>
             </tr>
         </tbody>
     </table>
