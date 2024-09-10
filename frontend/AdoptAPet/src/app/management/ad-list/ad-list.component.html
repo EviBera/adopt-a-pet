@@ -1,7 +1,7 @@
 <div>
     <h3>Advertisements in the database:</h3>
     <table data-test="table-of-ads">
-        <thead>
+        <thead data-test="table-head">
             <tr>
                 <th>Ad id</th>
                 <th>Expired?</th>
@@ -11,38 +11,40 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            <tr *ngFor="let ad of adList">
+        <tbody data-test="table-body">
+            <tr *ngFor="let ad of adList" data-test="table-row">
 
-                <td class="tooltip">
+                <td class="tooltip" data-test="cell-ad-id">
                     <span>{{ad.id}}</span>
                 </td>
-                <td class="tooltip">
+                <td class="tooltip" data-test="cell-expiration">
                     <span *ngIf="hasExpired(ad)">Expired</span>
                     <span *ngIf="!hasExpired(ad)">In progress</span>
-                    <span class="tooltiptext">{{ad.expiresAt | date:'medium' }}</span>
+                    <span class="tooltiptext" data-test="note-exp-date">{{ad.expiresAt | date:'medium' }}</span>
                 </td>
-                <td class="tooltip">
+                <td class="tooltip" data-test="cell-has-applications">
                     <span *ngIf="ad.applications.length > 0">Yes</span>
                     <span *ngIf="ad.applications.length === 0">No</span>
                 </td>
-                <td class="tooltip">{{ad.petDto.name}}
-                    <span class="tooltiptext" *ngIf="ad.petDto.isNeutered">Neutered {{ad.petDto.gender | lowercase}}
+                <td class="tooltip" data-test="cell-pet-name">{{ad.petDto.name}}
+                    <span class="tooltiptext" *ngIf="ad.petDto.isNeutered" data-test="note-neutered">Neutered {{ad.petDto.gender | lowercase}}
                         {{ad.petDto.species | lowercase}}</span>
-                    <span class="tooltiptext" *ngIf="!ad.petDto.isNeutered">{{ad.petDto.gender}} {{ad.petDto.species |
+                    <span class="tooltiptext" *ngIf="!ad.petDto.isNeutered" data-test="note-not-neutered">{{ad.petDto.gender}} {{ad.petDto.species |
                         lowercase}}</span>
                 </td>
-                <td class="tooltip">
+                <td class="tooltip" data-test="cell-has-owner">
                     <span *ngIf="ad.petDto.ownerId">Yes</span>
                     <span *ngIf="!ad.petDto.ownerId">No</span>
                 </td>
-                <th class="tooltip">
+                <th class="tooltip" data-test="cell-action-button">
                     <button type="button" 
                         *ngIf="hasExpired(ad) && ad.applications.length > 0 && !ad.petDto.ownerId" 
-                        (click)="handleApplications(ad)">Handle applications</button>
+                        (click)="handleApplications(ad)"
+                        data-test="handle-applications-btn">Handle applications</button>
                     <button type="button" 
                         *ngIf="hasExpired(ad) && ad.applications.length === 0 && !ad.petDto.ownerId" 
-                        (click)="createApplications(ad)">Create new ad</button>
+                        (click)="createApplications(ad)"
+                        data-test="create-ad-btn">Create new ad</button>
                 </th>
             </tr>
         </tbody>
