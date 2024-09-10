@@ -10,7 +10,7 @@
         <div class="radio">
             <strong>Applicants (select the new owner):</strong>
             <span *ngFor="let application of advertisement?.applications">
-                <input type="radio" [value]="application.userId" (change)="changeSelectedoption(application)" name="acceptedUser"/> {{application.userId}} 
+                <input type="radio" [value]="application.userId" (change)="changeSelectedoption(application)" name="acceptedUser"/> {{usersMap[application.userId]}} 
             </span>
         </div>
         <button type="submit">Save</button>

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ICreatePet, IPet, IUpdatePet } from '../models/pet.model';
 import { HttpClient } from '@angular/common/http';
 import { IAdvertisement } from '../models/advertisement.model';
+import { IApplicant } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +46,10 @@ export class ManagementService {
   getAdById(advertisementId: string): Observable<IAdvertisement> {
     let url = 'api/advertisement/' + advertisementId;
     return this.http.get<IAdvertisement>(url, {withCredentials: true});
+  }
+
+  getUserById(userId: string): Observable<IApplicant> {
+    let url = 'api/auth/' + userId;
+    return this.http.get<IApplicant>(url, {withCredentials: true});
   }
 }

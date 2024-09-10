@@ -20,3 +20,8 @@ export interface IUser {
     email: string;
     password: string;
   }
+
+  export interface IApplicant {
+    firstName: string;
+    lastName: string;
+  }

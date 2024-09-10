@@ -18,6 +18,7 @@ export class ApplicationHandlerComponent {
   advertisement: IAdvertisement | null = null;
   applicationId!: number;
   selectedUserId: string | null = '';
+  usersMap: { [key: string]: string } = {}; // Map userId to userName
 
   constructor(private route: ActivatedRoute, private managementSvc: ManagementService) {}
 
@@ -32,7 +33,17 @@ export class ApplicationHandlerComponent {
   fetchAd(advertisementId: string){
     this.managementSvc.getAdById(advertisementId).subscribe((advertisement) => {
       this.advertisement = advertisement;
-    })
+      // For each application, fetch the user name
+      this.advertisement?.applications.forEach(application => {
+        this.fetchUserName(application.userId);
+      });
+    });
+  }
+
+  fetchUserName(userId: string) {
+    this.managementSvc.getUserById(userId).subscribe((applicant) => {
+      this.usersMap[userId] = applicant.firstName + " " + applicant.lastName; // Store the user name in the map
+    });
   }
 
   changeSelectedoption(application: IApplication){
